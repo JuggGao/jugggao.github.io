@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>剑十三</title>
-    <link>http://jugggao.github.io/</link>
+    <link>https://jugggao.github.io/</link>
     <description>Recent content on 剑十三</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="http://jugggao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://jugggao.github.io/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
