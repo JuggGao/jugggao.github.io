@@ -41,13 +41,13 @@
 	<main>
 		<article>
 			<h1>A Tour of Go - Exercise: Maps</h1>
-			<b><time>11.11.2020</time></b>
+			<b><time>11.11.2020</time></b> |
 		       
-		           <a href="/tags/go">Go</a>
+		           <a href="/tags/go">Go</a>.
         	       
-		           <a href="/tags/a-tour-of-go">A Tour of Go</a>
+		           <a href="/tags/a-tour-of-go">A Tour of Go</a>.
         	       
-		           <a href="/tags/exercise">Exercise</a>
+		           <a href="/tags/exercise">Exercise</a>.
         	       
 
 			<div>
@@ -56,14 +56,12 @@
 <p>You might find <a href="https://golang.org/pkg/strings/#Fields">strings.Fields</a> helpful.</p>
 <hr>
 <h3 id="1-解题">1. 解题</h3>
-<p>单词统计是一个很经典的小程序了，使用 Python 解法如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
-<span style="color:#f92672">import</span> re
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">word_count</span>(s):
-    words <span style="color:#f92672">=</span> [i<span style="color:#f92672">.</span>lower() <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">&#34;\w+&#34;</span>, s)]
-    <span style="color:#66d9ef">return</span> Counter(words)
-</code></pre></div><p>使用 Go 解法如下：</p>
+<p>单词统计是一个很经典的小程序了，接受一个字符串返回一个 <code>Map</code> 来统计这个字符串每个单词的数量。</p>
+<p>思路：</p>
+<ol>
+<li>需要提取字符串中的单词。</li>
+<li>再对每个单词进行计数。</li>
+</ol>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> (
@@ -83,6 +81,13 @@
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
 	<span style="color:#a6e22e">wc</span>.<span style="color:#a6e22e">Test</span>(<span style="color:#a6e22e">WordCount</span>)
 }
+</code></pre></div><p>使用 Python 解法如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> re
+<span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">word_count</span>(s):
+    words <span style="color:#f92672">=</span> [i<span style="color:#f92672">.</span>lower() <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">&#34;\w+&#34;</span>, s)]
+    <span style="color:#66d9ef">return</span> Counter(words)
 </code></pre></div><h3 id="2-思考">2. 思考</h3>
 <p><strong>Q：Python 代码量比 Go 要少，得益于 Python 标准库的丰富。那么如果不使用 <code>Counter</code> 类，Python 代码量如何？</strong></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> re
@@ -124,8 +129,9 @@ Python 的模型规定，数值对象是不可变的，所以 <code>++</code> �
 <p><strong>Q: Go 语言中的 strings.Fields 方法和 Python 中的正则和列表推导相比孰优孰劣？</strong></p>
 <p>看起来 Go 更好一些，我一向是不喜欢使用正则的，效率低。<br>
 也不知道 Go 底层是怎么处理的，等以后有读源码的能力在解答吧。</p>
-<h3 id="3-其他">3. 其他</h3>
+<h3 id="3-参考">3. 参考</h3>
 <p>另外，这道题提供了一个<a href="https://github.com/golang/tour/blob/master/wc/wc.go">测试函数</a> <code>wc.Test</code>，可以看一看，可以初步了解 Go 语言程序测试的写法。</p>
+<p>也可以参考 A Tour of Go 的 Github 仓库中的<a href="https://github.com/golang/tour/blob/master/solutions/maps.go">答案</a>。</p>
 			</div>
 		</article>
 	</main>
@@ -138,6 +144,10 @@ Python 的模型规定，数值对象是不可变的，所以 <code>++</code> �
 			<ul>
 				
 				<li><a href="/posts/go/tour.golang.org/exercise-maps/">A Tour of Go - Exercise: Maps</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-slices/">A Tour of Go - Exercise: Slices</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-loops-and-functions/">A Tour of Go - Exercise: Loops and Functions</a></li>
 				
 			</ul>
 		</div>

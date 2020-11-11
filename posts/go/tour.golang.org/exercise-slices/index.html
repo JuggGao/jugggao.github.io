@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<style>a{TEXT-DECORATION:none}</style>
+	<title>A Tour of Go - Exercise: Slices</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	------------<br>
+	-- <a href="https://jugggao.github.io/">剑十三</a> --<br>
+	------------
+	<div style="float: right;">与其感慨路难行，不如马上出发</div><br>
+	<p>
+	<nav>
+			| <a href="/"><b>主页</b></a> |
+			
+			
+			<a href="/posts/"><b>文档</b></a> |
+			
+			<a href="/categories/"><b>分类</b></a> |
+			
+			<a href="/tags/"><b>标签</b></a> |
+			
+			<a href="/about/"><b>关于</b></a> |
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>A Tour of Go - Exercise: Slices</h1>
+			<b><time>10.11.2020</time></b> |
+		       
+		           <a href="/tags/go">Go</a>.
+        	       
+		           <a href="/tags/a-tour-of-go">A Tour of Go</a>.
+        	       
+		           <a href="/tags/exercise">Exercise</a>.
+        	       
+
+			<div>
+				<h3 id="exercise-sliceshttpstourgolangorgmoretypes18"><a href="https://tour.golang.org/moretypes/18">Exercise: Slices</a></h3>
+<p>Implement Pic. It should return a slice of length <code>dy</code>, each element of which is a slice of <code>dx</code> 8-bit unsigned integers. When you run the program, it will display your picture, interpreting the integers as grayscale (well, bluescale) values.</p>
+<p>The choice of image is up to you. Interesting functions include <code>(x+y)/2</code>, <code>x*y</code>, and <code>x^y</code>.</p>
+<p>(You need to use a loop to allocate each <code>[]uint8</code> inside the <code>[][]uint8</code>.)</p>
+<p>(Use <code>uint8(intValue)</code> to convert between types.)</p>
+<hr>
+<h3 id="1-解题">1. 解题</h3>
+<p>这道题官网提供了一个<a href="https://github.com/golang/tour/blob/4bb7d986198d/pic/pic.go">画图函数</a> <code>pic.Show</code>，可以生成图片。</p>
+<p><code>pic.Show</code> <a href="https://pkg.go.dev/golang.org/x/tour/pic#Show">语法</a>为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Show</span>(<span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">dx</span>, <span style="color:#a6e22e">dy</span> <span style="color:#66d9ef">int</span>) [][]<span style="color:#66d9ef">uint8</span>)
+</code></pre></div><p>它接受一个函数作为参数，要求的正是编写这个函数。</p>
+<p>图片处理一点不懂 😓，所以只能按照官网给的提示来完成。</p>
+<p>思路：</p>
+<ol>
+<li>定义一个外层 Slice 长度为 <code>dy</code>，子元素也为  Slice，且元素长度为 <code>dx</code>。</li>
+<li>然后使用两层 For 循环嵌套来计算里层 Slice 的值，里层 Slice 的值根据 <code>(x+y)/2</code>、<code>x*y</code> 或 <code>x^y</code> 来计算。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;golang.org/x/tour/pic&#34;</span>
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Pic</span>(<span style="color:#a6e22e">dx</span>, <span style="color:#a6e22e">dy</span> <span style="color:#66d9ef">int</span>) [][]<span style="color:#66d9ef">uint8</span> {
+	<span style="color:#a6e22e">pixel</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#66d9ef">uint8</span>, <span style="color:#a6e22e">dy</span>)
+
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pixel</span> {
+        <span style="color:#a6e22e">data</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">uint8</span>, <span style="color:#a6e22e">dx</span>)
+		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">data</span> {
+			<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">j</span>] = uint8((<span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">j</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>)
+		}
+		<span style="color:#a6e22e">pixel</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">data</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pixel</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">pic</span>.<span style="color:#a6e22e">Show</span>(<span style="color:#a6e22e">Pic</span>)
+}
+</code></pre></div><p>得出一个 Base64 字符串，可添加至浏览器进行查看：</p>
+<pre><code>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAACaUlEQVR42uzVMRGAAAzAwLSHf8tgAAf95QVkyVNvNRN50FWBl10V6ABa0AFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIB6ADqEAHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdAA6gBZ0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIBSAcgHYB0ANIB6AAq0AFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgHQA0gFIByAdgA6gAh2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADSAUgHIB2AdADyxy8AAP//YSoDD5pLB7MAAAAASUVORK5CYII=
+</code></pre><p><img src="/images/go/a-tour-of-go-exercise-slices.png" alt=""></p>
+<h3 id="2-参考">2. 参考</h3>
+<p>参考 A Tour of Go 的 Github 仓库中的<a href="https://github.com/golang/tour/blob/master/solutions/slices.go">答案</a>，更符合我的实现思路。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Pic</span>(<span style="color:#a6e22e">dx</span>, <span style="color:#a6e22e">dy</span> <span style="color:#66d9ef">int</span>) [][]<span style="color:#66d9ef">uint8</span> {
+	<span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#66d9ef">uint8</span>, <span style="color:#a6e22e">dy</span>)
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">p</span> {
+		<span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">i</span>] = make([]<span style="color:#66d9ef">uint8</span>, <span style="color:#a6e22e">dx</span>)
+	}
+
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">y</span>, <span style="color:#a6e22e">row</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">p</span> {
+		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">row</span> {
+			<span style="color:#a6e22e">row</span>[<span style="color:#a6e22e">x</span>] = uint8(<span style="color:#a6e22e">x</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">y</span>)
+		}
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">p</span>
+}
+</code></pre></div><p>先定义好里外层 Slice 结构，再进行计算。</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>最近文章</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-maps/">A Tour of Go - Exercise: Maps</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-slices/">A Tour of Go - Exercise: Slices</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-loops-and-functions/">A Tour of Go - Exercise: Loops and Functions</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>| &copy; 2020 <a href="https://jugggao.github.io/"><b>剑十三</b></a> |
+	<a href="https://github.com/jugggao"><b>Github</b></a> |
+	</p>
+</footer>
+
+</body>
+</html>

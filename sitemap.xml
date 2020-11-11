@@ -52,4 +52,14 @@
     <lastmod>2020-11-11T00:00:00+00:00</lastmod>
   </url>
   
+  <url>
+    <loc>https://jugggao.github.io/posts/go/tour.golang.org/exercise-slices/</loc>
+    <lastmod>2020-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jugggao.github.io/posts/go/tour.golang.org/exercise-loops-and-functions/</loc>
+    <lastmod>2020-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
 </urlset>
