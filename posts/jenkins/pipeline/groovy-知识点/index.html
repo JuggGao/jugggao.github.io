@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<style>a{TEXT-DECORATION:none}</style>
+	<title>Jenkins Pipeline - Groovy 知识点</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	------------<br>
+	-- <a href="https://jugggao.github.io/">剑十三</a> --<br>
+	------------
+	<div style="float: right;">与其感慨路难行，不如马上出发</div><br>
+	<p>
+	<nav>
+			| <a href="/"><b>主页</b></a> |
+			
+			
+			<a href="/posts/"><b>文档</b></a> |
+			
+			<a href="/categories/"><b>分类</b></a> |
+			
+			<a href="/tags/"><b>标签</b></a> |
+			
+			<a href="/about/"><b>关于</b></a> |
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Jenkins Pipeline - Groovy 知识点</h1>
+			<b><time>12.11.2020</time></b> |
+		       
+		           <a href="/tags/jenkins">Jenkins</a>.
+        	       
+		           <a href="/tags/jenkins-pipeline">Jenkins Pipeline</a>.
+        	       
+		           <a href="/tags/groovy">Groovy</a>.
+        	       
+
+			<div>
+				<h3 id="groovy-知识点">Groovy 知识点</h3>
+<p>如果想深入学习 Jenkins，并编写 Jenkins Pipeline 共享库，Groovy 是必须学习并了的。<br>
+Groovy 是动态语言，语法和 Java 基本一致，实际上就是 Java，但是又有一些特性。<br>
+这里就记录自己需要注意的特性。</p>
+<h3 id="1-数据类型">1. 数据类型</h3>
+<ul>
+<li>
+<p>Groovy 同时支持静态类型和动态类型。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="color:#66d9ef">def</span> dynamicDate  <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">()</span>
+Date staticDate <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">()</span>
+<span style="color:#75715e">// 可以用 var.class 获取变量类型
+</span><span style="color:#75715e"></span>println dynamicDate<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span> <span style="color:#f92672">==</span> staticDate<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span>
+</code></pre></div><p>如果声明了静态类型，就不能再改变该变量的类型。</p>
+</li>
+</ul>
+<h3 id="2-作用域">2. 作用域</h3>
+<p>在编写 Jenkins Pipeline 共享库的时候需要注意，跨 Stage 传参的时候就需要注意其参数的作用域。</p>
+<ul>
+<li>
+<p>Groovy 类的作用域和 Java 相同。</p>
+</li>
+<li>
+<p><strong>Groovy 脚本中的作用域分为绑定域和本地域。</strong></p>
+<ul>
+<li>绑定域：脚本内的全局作用域，相当于该脚本对象的成员变量。如果未定义变量，仅仅初始化但未声明，其作用域就是绑定域。</li>
+<li>本地域：脚本内的代码块。如果定义过变量，其作用域就是本地域。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy">String hello <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello&#34;</span>	<span style="color:#75715e">// 定义变量，作用域是本地域
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">def</span> world <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;world&#34;</span>		<span style="color:#75715e">//定义变量，作用域是本地域
+</span><span style="color:#75715e"></span>
+helloworld <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello world&#34;</span>	<span style="color:#75715e">// 全局变量，作用域是绑定域
+</span><span style="color:#75715e"></span>  
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">check</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    println hello <span style="color:#75715e">// 找不到变量
+</span><span style="color:#75715e"></span>    println world <span style="color:#75715e">// 找不到变量
+</span><span style="color:#75715e"></span>    println helloworld <span style="color:#75715e">// 可以正常打印
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+check<span style="color:#f92672">()</span>  
+</code></pre></div></li>
+<li>
+<p>Groovy 通过 new 建立的脚本对象可以绑定指定的值到该脚本的绑定域中。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="color:#75715e">// File: test.groovy
+</span><span style="color:#75715e"></span>helloworld <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello world&#34;</span> <span style="color:#75715e">// 绑定域
+</span><span style="color:#75715e"></span>  
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> println<span style="color:#f92672">(</span>helloworld<span style="color:#f92672">)</span> <span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">def</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> test<span style="color:#f92672">()</span>
+s<span style="color:#f92672">.</span><span style="color:#a6e22e">binding</span><span style="color:#f92672">.</span><span style="color:#a6e22e">goodbye</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;good bye&#34;</span>	<span style="color:#75715e">//绑定不存在的变量不会报错
+</span><span style="color:#75715e"></span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">binding</span><span style="color:#f92672">.</span><span style="color:#a6e22e">helloworld</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello groovy&#34;</span> <span style="color:#75715e">// 修改绑定域中存在的变量的值
+</span><span style="color:#75715e"></span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">hello</span><span style="color:#f92672">()</span>	<span style="color:#75715e">// hello groovy
+</span></code></pre></div></li>
+<li>
+<p>使用 <a href="https://docs.groovy-lang.org/2.5.8/html/gapi/index.html?groovy/transform/Field.html">@Filed</a> 标注也可以将变量的作用域变为绑定域中。</p>
+<pre><code>import groovy.transform.Field
+@Field List awe = [1, 2, 3]
+def awesum() { awe.sum() }
+assert awesum() == 6
+</code></pre></li>
+</ul>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>最近文章</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/">Jenkins Pipeline - Groovy 知识点</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-maps/">A Tour of Go - Exercise: Maps</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-slices/">A Tour of Go - Exercise: Slices</a></li>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-loops-and-functions/">A Tour of Go - Exercise: Loops and Functions</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>| &copy; 2020 <a href="https://jugggao.github.io/"><b>剑十三</b></a> |
+	<a href="https://github.com/jugggao"><b>Github</b></a> |
+	</p>
+</footer>
+
+</body>
+</html>
