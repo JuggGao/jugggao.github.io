@@ -104,11 +104,11 @@ s<span style="color:#f92672">.</span><span style="color:#a6e22e">binding</span><
 </span></code></pre></div></li>
 <li>
 <p>使用 <a href="https://docs.groovy-lang.org/2.5.8/html/gapi/index.html?groovy/transform/Field.html">@Filed</a> 标注也可以将变量的作用域变为绑定域中。</p>
-<pre><code>import groovy.transform.Field
-@Field List awe = [1, 2, 3]
-def awesum() { awe.sum() }
-assert awesum() == 6
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="color:#f92672">import</span> groovy.transform.Field
+<span style="color:#a6e22e">@Field</span> List awe <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">]</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">awesum</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> awe<span style="color:#f92672">.</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">()</span> <span style="color:#f92672">}</span>
+<span style="color:#66d9ef">assert</span> <span style="color:#a6e22e">awesum</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">6</span>
+</code></pre></div></li>
 </ul>
 			</div>
 		</article>
