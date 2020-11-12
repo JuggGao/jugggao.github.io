@@ -3,7 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jugggao.github.io/tags/a-tour-of-go/</loc>
+    <lastmod>2020-11-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jugggao.github.io/posts/go/tour.golang.org/exercise-fibonacci-closure/</loc>
+    <lastmod>2020-11-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jugggao.github.io/categories/</loc>
+    <lastmod>2020-11-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jugggao.github.io/tags/exercise/</loc>
+    <lastmod>2020-11-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jugggao.github.io/tags/go/</loc>
+    <lastmod>2020-11-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jugggao.github.io/categories/go/</loc>
     <lastmod>2020-11-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -48,27 +73,7 @@
   </url>
   
   <url>
-    <loc>https://jugggao.github.io/tags/a-tour-of-go/</loc>
-    <lastmod>2020-11-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://jugggao.github.io/posts/go/tour.golang.org/exercise-maps/</loc>
-    <lastmod>2020-11-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jugggao.github.io/tags/exercise/</loc>
-    <lastmod>2020-11-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jugggao.github.io/tags/go/</loc>
-    <lastmod>2020-11-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jugggao.github.io/categories/go/</loc>
     <lastmod>2020-11-11T00:00:00+00:00</lastmod>
   </url>
   

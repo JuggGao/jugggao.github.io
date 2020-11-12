@@ -75,7 +75,7 @@ Date staticDate <span style="color:#f92672">=</span> <span style="color:#66d9ef"
 <li>
 <p><strong>Groovy 脚本中的作用域分为绑定域和本地域。</strong></p>
 <ul>
-<li>绑定域：脚本内的全局作用域，相当于该脚本对象的成员变量。如果未定义变量，仅仅初始化但未声明，其作用域就是绑定域。</li>
+<li>绑定域：脚本内的全局作用域，相当于该脚本对象的成员变量。如果未定义变量，仅仅初始化但未声明，其作用域就是绑定域（与 JavaScript 中行为相同）。</li>
 <li>本地域：脚本内的代码块。如果定义过变量，其作用域就是本地域。</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy">String hello <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello&#34;</span>	<span style="color:#75715e">// 定义变量，作用域是本地域
@@ -103,7 +103,7 @@ s<span style="color:#f92672">.</span><span style="color:#a6e22e">binding</span><
 </span><span style="color:#75715e"></span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">hello</span><span style="color:#f92672">()</span>	<span style="color:#75715e">// hello groovy
 </span></code></pre></div></li>
 <li>
-<p>使用 <a href="https://docs.groovy-lang.org/2.5.8/html/gapi/index.html?groovy/transform/Field.html">@Filed</a> 标注也可以将变量的作用域变为绑定域中。</p>
+<p>使用 <a href="https://docs.groovy-lang.org/2.5.8/html/gapi/index.html?groovy/transform/Field.html">@Filed</a> 标注也可以将变量的作用域变为绑定域中（和 Python 中的 global 声明变量类似）。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="color:#f92672">import</span> groovy.transform.Field
 <span style="color:#a6e22e">@Field</span> List awe <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">]</span>
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">awesum</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> awe<span style="color:#f92672">.</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">()</span> <span style="color:#f92672">}</span>
@@ -120,6 +120,8 @@ s<span style="color:#f92672">.</span><span style="color:#a6e22e">binding</span><
 		</div>
 		<div>
 			<ul>
+				
+				<li><a href="/posts/go/tour.golang.org/exercise-fibonacci-closure/">A Tour of Go - Exercise: Fibonacci closure</a></li>
 				
 				<li><a href="/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/">Jenkins Pipeline - Groovy 知识点</a></li>
 				
