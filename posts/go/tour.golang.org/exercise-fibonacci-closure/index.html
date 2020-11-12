@@ -89,7 +89,7 @@
         <span style="color:#66d9ef">print</span>(f())
 </code></pre></div><p>这两个实现有共通之处：调用 <code>Fibonacci()</code> 或 <code>fibonacci()</code> 得到一个可调用对象 f，它会更新历史值，然后计算当前值。</p>
 <p><code>Fibonacci()</code> 类的实例 f 在哪里存储历史值很明显：self.a 和 self.b 实例属性。但是闭包实现的 f 函数在哪里寻找 a 和 b 的历史值呢？</p>
-<p>在 <code>func</code> 函数中，a 和 b 为自由变量（free variable），指未在本地作用域中绑定的变量，审查闭包返回的 func 对象，可以发现 Python 在 <code>f.__code__.co_freevars</code> 属性中保存自由变量的名称；在 <code>f.__closure__</code> 中的各个元素对应 <code>f.__code__.co_freevars</code> 中的一个名称，这些元素是 cell 对象，有个 cell_contents 属性，保存其值。</p>
+<p>在 <code>func</code> 函数中，a 和 b 为自由变量（free variable），指未在本地作用域中绑定的变量，审查返回的 func 对象，可以发现 Python 在 <code>f.__code__.co_freevars</code> 属性中保存自由变量的名称；在 <code>f.__closure__</code> 中的各个元素对应 <code>f.__code__.co_freevars</code> 中的一个名称，这些元素是 cell 对象，有个 cell_contents 属性，保存其值。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">print</span>(f<span style="color:#f92672">.</span>__code__<span style="color:#f92672">.</span>co_freevars) <span style="color:#75715e"># (&#39;a&#39;, &#39;b&#39;)</span>
 <span style="color:#66d9ef">print</span>(f<span style="color:#f92672">.</span>__closure__[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>cell_contents, f<span style="color:#f92672">.</span>__closure__[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>cell_contents) <span style="color:#75715e"># 34 55</span>
 </code></pre></div><p>所以，闭包是一种函数，它会保留定义函数时存在的自由变量的绑定，这样调用函数时，虽然定义作用域不可用了，但是仍能使用那些绑定。</p>
