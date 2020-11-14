@@ -1,65 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Go on 剑十三</title>
-    <link>https://jugggao.github.io/tags/go/</link>
-    <description>Recent content in Go on 剑十三</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 12 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jugggao.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>A Tour of Go - Exercise: Fibonacci closure</title>
-      <link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-fibonacci-closure/</link>
-      <pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-fibonacci-closure/</guid>
-      <description>&lt;h3 id=&#34;exercise-fibonacci-closurehttpstourgolangorgmoretypes26&#34;&gt;&lt;a href=&#34;https://tour.golang.org/moretypes/26&#34;&gt;Exercise: Fibonacci closure&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Let&amp;rsquo;s have some fun with functions.&lt;/p&gt;
-&lt;p&gt;Implement a &lt;code&gt;fibonacci&lt;/code&gt; function that returns a function (a closure) that returns successive &lt;a href=&#34;https://en.wikipedia.org/wiki/Fibonacci_number&#34;&gt;fibonacci numbers&lt;/a&gt; (0, 1, 1, 2, 3, 5, &amp;hellip;).&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>A Tour of Go - Exercise: Maps</title>
-      <link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-maps/</link>
-      <pubDate>Wed, 11 Nov 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-maps/</guid>
-      <description>&lt;h3 id=&#34;exercise-mapshttpstourgolangorgmoretypes23&#34;&gt;&lt;a href=&#34;https://tour.golang.org/moretypes/23&#34;&gt;Exercise: Maps&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Implement &lt;code&gt;WordCount&lt;/code&gt;. It should return a map of the counts of each “word” in the string &lt;code&gt;s&lt;/code&gt;. The &lt;code&gt;wc.Test&lt;/code&gt; function runs a test suite against the provided function and prints success or failure.&lt;/p&gt;
-&lt;p&gt;You might find &lt;a href=&#34;https://golang.org/pkg/strings/#Fields&#34;&gt;strings.Fields&lt;/a&gt; helpful.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>A Tour of Go - Exercise: Slices</title>
-      <link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-slices/</link>
-      <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-slices/</guid>
-      <description>&lt;h3 id=&#34;exercise-sliceshttpstourgolangorgmoretypes18&#34;&gt;&lt;a href=&#34;https://tour.golang.org/moretypes/18&#34;&gt;Exercise: Slices&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Implement Pic. It should return a slice of length &lt;code&gt;dy&lt;/code&gt;, each element of which is a slice of &lt;code&gt;dx&lt;/code&gt; 8-bit unsigned integers. When you run the program, it will display your picture, interpreting the integers as grayscale (well, bluescale) values.&lt;/p&gt;
-&lt;p&gt;The choice of image is up to you. Interesting functions include &lt;code&gt;(x+y)/2&lt;/code&gt;, &lt;code&gt;x*y&lt;/code&gt;, and &lt;code&gt;x^y&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;(You need to use a loop to allocate each &lt;code&gt;[]uint8&lt;/code&gt; inside the &lt;code&gt;[][]uint8&lt;/code&gt;.)&lt;/p&gt;
-&lt;p&gt;(Use &lt;code&gt;uint8(intValue)&lt;/code&gt; to convert between types.)&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>A Tour of Go - Exercise: Loops and Functions</title>
-      <link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-loops-and-functions/</link>
-      <pubDate>Mon, 09 Nov 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-loops-and-functions/</guid>
-      <description>&lt;h3 id=&#34;exercise-loops-and-functionshttpstourgolangorgflowcontrol8&#34;&gt;&lt;a href=&#34;https://tour.golang.org/flowcontrol/8&#34;&gt;Exercise: Loops and Functions&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;As a way to play with functions and loops, let&amp;rsquo;s implement a square root function: given a number x, we want to find the number z for which z² is most nearly x.&lt;/p&gt;
-&lt;p&gt;Computers typically compute the square root of x using a loop. Starting with some guess z, we can adjust z based on how close z² is to x, producing a better guess:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;z -= (z*z - x) / (2*z)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Repeating this adjustment makes the guess better and better until we reach an answer that is as close to the actual square root as can be.&lt;/p&gt;
-&lt;p&gt;Implement this in the &lt;code&gt;func Sqrt&lt;/code&gt; provided. A decent starting guess for z is 1, no matter what the input. To begin with, repeat the calculation 10 times and print each z along the way. See how close you get to the answer for various values of x (1, 2, 3, &amp;hellip;) and how quickly the guess improves.&lt;/p&gt;
-&lt;p&gt;Hint: To declare and initialize a floating point value, give it floating point syntax or use a conversion:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;z := 1.0
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on 剑十三</title><link>https://jugggao.github.io/tags/go/</link><description>Recent content in Go on 剑十三</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 12 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jugggao.github.io/tags/go/index.xml" rel="self" type="application/rss+xml"/><item><title>A Tour of Go - Exercise: Fibonacci closure</title><link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-fibonacci-closure/</link><pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-fibonacci-closure/</guid><description>&lt;h3 id="exercise-fibonacci-closurehttpstourgolangorgmoretypes26">&lt;a href="https://tour.golang.org/moretypes/26">Exercise: Fibonacci closure&lt;/a>&lt;/h3>
+&lt;p>Let&amp;rsquo;s have some fun with functions.&lt;/p>
+&lt;p>Implement a &lt;code>fibonacci&lt;/code> function that returns a function (a closure) that returns successive &lt;a href="https://en.wikipedia.org/wiki/Fibonacci_number">fibonacci numbers&lt;/a> (0, 1, 1, 2, 3, 5, &amp;hellip;).&lt;/p></description></item><item><title>A Tour of Go - Exercise: Maps</title><link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-maps/</link><pubDate>Wed, 11 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-maps/</guid><description>&lt;h3 id="exercise-mapshttpstourgolangorgmoretypes23">&lt;a href="https://tour.golang.org/moretypes/23">Exercise: Maps&lt;/a>&lt;/h3>
+&lt;p>Implement &lt;code>WordCount&lt;/code>. It should return a map of the counts of each “word” in the string &lt;code>s&lt;/code>. The &lt;code>wc.Test&lt;/code> function runs a test suite against the provided function and prints success or failure.&lt;/p>
+&lt;p>You might find &lt;a href="https://golang.org/pkg/strings/#Fields">strings.Fields&lt;/a> helpful.&lt;/p></description></item><item><title>A Tour of Go - Exercise: Slices</title><link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-slices/</link><pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-slices/</guid><description>&lt;h3 id="exercise-sliceshttpstourgolangorgmoretypes18">&lt;a href="https://tour.golang.org/moretypes/18">Exercise: Slices&lt;/a>&lt;/h3>
+&lt;p>Implement Pic. It should return a slice of length &lt;code>dy&lt;/code>, each element of which is a slice of &lt;code>dx&lt;/code> 8-bit unsigned integers. When you run the program, it will display your picture, interpreting the integers as grayscale (well, bluescale) values.&lt;/p>
+&lt;p>The choice of image is up to you. Interesting functions include &lt;code>(x+y)/2&lt;/code>, &lt;code>x*y&lt;/code>, and &lt;code>x^y&lt;/code>.&lt;/p>
+&lt;p>(You need to use a loop to allocate each &lt;code>[]uint8&lt;/code> inside the &lt;code>[][]uint8&lt;/code>.)&lt;/p>
+&lt;p>(Use &lt;code>uint8(intValue)&lt;/code> to convert between types.)&lt;/p></description></item><item><title>A Tour of Go - Exercise: Loops and Functions</title><link>https://jugggao.github.io/posts/go/tour.golang.org/exercise-loops-and-functions/</link><pubDate>Mon, 09 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/go/tour.golang.org/exercise-loops-and-functions/</guid><description>&lt;h3 id="exercise-loops-and-functionshttpstourgolangorgflowcontrol8">&lt;a href="https://tour.golang.org/flowcontrol/8">Exercise: Loops and Functions&lt;/a>&lt;/h3>
+&lt;p>As a way to play with functions and loops, let&amp;rsquo;s implement a square root function: given a number x, we want to find the number z for which z² is most nearly x.&lt;/p>
+&lt;p>Computers typically compute the square root of x using a loop. Starting with some guess z, we can adjust z based on how close z² is to x, producing a better guess:&lt;/p>
+&lt;pre>&lt;code>z -= (z*z - x) / (2*z)
+&lt;/code>&lt;/pre>&lt;p>Repeating this adjustment makes the guess better and better until we reach an answer that is as close to the actual square root as can be.&lt;/p>
+&lt;p>Implement this in the &lt;code>func Sqrt&lt;/code> provided. A decent starting guess for z is 1, no matter what the input. To begin with, repeat the calculation 10 times and print each z along the way. See how close you get to the answer for various values of x (1, 2, 3, &amp;hellip;) and how quickly the guess improves.&lt;/p>
+&lt;p>Hint: To declare and initialize a floating point value, give it floating point syntax or use a conversion:&lt;/p>
+&lt;pre>&lt;code>z := 1.0
 z := float64(1)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, change the loop condition to stop once the value has stopped changing (or only changes by a very small amount). See if that&amp;rsquo;s more or fewer than 10 iterations. Try other initial guesses for z, like x, or x/2. How close are your function&amp;rsquo;s results to the &lt;a href=&#34;https://golang.org/pkg/math/#Sqrt&#34;&gt;math.Sqrt&lt;/a&gt; in the standard library?&lt;/p&gt;
-&lt;p&gt;(Note: If you are interested in the details of the algorithm, the z² − x above is how far away z² is from where it needs to be (x), and the division by 2z is the derivative of z², to scale how much we adjust z by how quickly z² is changing. This general approach is called &lt;a href=&#34;https://en.wikipedia.org/wiki/Newton%27s_method&#34;&gt;Newton&amp;rsquo;s method&lt;/a&gt;. It works well for many functions but especially well for square root.)&lt;/p&gt;</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;p>Next, change the loop condition to stop once the value has stopped changing (or only changes by a very small amount). See if that&amp;rsquo;s more or fewer than 10 iterations. Try other initial guesses for z, like x, or x/2. How close are your function&amp;rsquo;s results to the &lt;a href="https://golang.org/pkg/math/#Sqrt">math.Sqrt&lt;/a> in the standard library?&lt;/p>
+&lt;p>(Note: If you are interested in the details of the algorithm, the z² − x above is how far away z² is from where it needs to be (x), and the division by 2z is the derivative of z², to scale how much we adjust z by how quickly z² is changing. This general approach is called &lt;a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton&amp;rsquo;s method&lt;/a>. It works well for many functions but especially well for square root.)&lt;/p></description></item></channel></rss>

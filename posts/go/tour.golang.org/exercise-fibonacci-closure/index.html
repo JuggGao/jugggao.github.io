@@ -1,161 +1,59 @@
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<style type=text/css>body{font-family:monospace;}</style>
-	<style>a{TEXT-DECORATION:none}</style>
-	<title>A Tour of Go - Exercise: Fibonacci closure</title>
-	
-	
-	<link rel="stylesheet" href="/css/style.css">
-	
-	
-</head>
-<body>
-	<header>
-	------------<br>
-	-- <a href="https://jugggao.github.io/">剑十三</a> --<br>
-	------------
-	<div style="float: right;">与其感慨路难行，不如马上出发</div><br>
-	<p>
-	<nav>
-			| <a href="/"><b>主页</b></a> |
-			
-			
-			<a href="/posts/"><b>文档</b></a> |
-			
-			<a href="/categories/"><b>分类</b></a> |
-			
-			<a href="/tags/"><b>标签</b></a> |
-			
-			<a href="/about/"><b>关于</b></a> |
-			
-	</nav>
-	</p>
-	
-</header>
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><style>a{text-decoration:none}</style><title>A Tour of Go - Exercise: Fibonacci closure</title><link rel=stylesheet href=/css/style.css></head><body><header>------------<br>-- <a href=https://jugggao.github.io/>剑十三</a> --<br>------------<div style=float:right>与其感慨路难行，不如马上出发</div><br><p><nav>| <a href=/><b>主页</b></a> |
+<a href=/posts/><b>文档</b></a> |
+<a href=/categories/><b>分类</b></a> |
+<a href=/tags/><b>标签</b></a> |
+<a href=/about/><b>关于</b></a> |</nav></p></header><main><article><h1>A Tour of Go - Exercise: Fibonacci closure</h1><b><time>12.11.2020</time></b> |
+<a href=/tags/go>Go</a>.
+<a href=/tags/a-tour-of-go>A Tour of Go</a>.
+<a href=/tags/exercise>Exercise</a>.<div><h3 id=exercise-fibonacci-closurehttpstourgolangorgmoretypes26><a href=https://tour.golang.org/moretypes/26>Exercise: Fibonacci closure</a></h3><p>Let&rsquo;s have some fun with functions.</p><p>Implement a <code>fibonacci</code> function that returns a function (a closure) that returns successive <a href=https://en.wikipedia.org/wiki/Fibonacci_number>fibonacci numbers</a> (0, 1, 1, 2, 3, 5, &mldr;).</p><hr><h3 id=1-解题>1. 解题</h3><p>在解这道题之前先简单回忆一下什么是闭包，在学习《流畅的 Python》一书时基本理解了闭包的概念，我先用 Python 的类和闭包来解下这道题。</p><p>Python 类实现：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Fibonacci</span>():
 
-	
-	<main>
-		<article>
-			<h1>A Tour of Go - Exercise: Fibonacci closure</h1>
-			<b><time>12.11.2020</time></b> |
-		       
-		           <a href="/tags/go">Go</a>.
-        	       
-		           <a href="/tags/a-tour-of-go">A Tour of Go</a>.
-        	       
-		           <a href="/tags/exercise">Exercise</a>.
-        	       
+    <span style=color:#66d9ef>def</span> __init__(self):
+        self<span style=color:#f92672>.</span>a <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+        self<span style=color:#f92672>.</span>b <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
 
-			<div>
-				<h3 id="exercise-fibonacci-closurehttpstourgolangorgmoretypes26"><a href="https://tour.golang.org/moretypes/26">Exercise: Fibonacci closure</a></h3>
-<p>Let&rsquo;s have some fun with functions.</p>
-<p>Implement a <code>fibonacci</code> function that returns a function (a closure) that returns successive <a href="https://en.wikipedia.org/wiki/Fibonacci_number">fibonacci numbers</a> (0, 1, 1, 2, 3, 5, &hellip;).</p>
-<hr>
-<h3 id="1-解题">1. 解题</h3>
-<p>在解这道题之前先简单回忆一下什么是闭包，在学习《流畅的 Python》一书时基本理解了闭包的概念，我先用 Python 的类和闭包来解下这道题。</p>
-<p>Python 类实现：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Fibonacci</span>():
-
-    <span style="color:#66d9ef">def</span> __init__(self):
-        self<span style="color:#f92672">.</span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-        self<span style="color:#f92672">.</span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-
-    <span style="color:#66d9ef">def</span> __call__(self):
-        self<span style="color:#f92672">.</span>a, self<span style="color:#f92672">.</span>b <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>b, self<span style="color:#f92672">.</span>a <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>b
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>a
+    <span style=color:#66d9ef>def</span> __call__(self):
+        self<span style=color:#f92672>.</span>a, self<span style=color:#f92672>.</span>b <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>b, self<span style=color:#f92672>.</span>a <span style=color:#f92672>+</span> self<span style=color:#f92672>.</span>b
+        <span style=color:#66d9ef>return</span> self<span style=color:#f92672>.</span>a
 
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
-    f <span style="color:#f92672">=</span> Fibonacci()
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
-        <span style="color:#66d9ef">print</span>(f())
-</code></pre></div><p>Python 闭包实现：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fibonacci</span>():
-    a, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">func</span>():
+<span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
+    f <span style=color:#f92672>=</span> Fibonacci()
+    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>10</span>):
+        <span style=color:#66d9ef>print</span>(f())
+</code></pre></div><p>Python 闭包实现：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>fibonacci</span>():
+    a, b <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>
+    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>func</span>():
         nonlocal a, b
-        a, b <span style="color:#f92672">=</span> b, a<span style="color:#f92672">+</span>b
-        <span style="color:#66d9ef">return</span> a
-    <span style="color:#66d9ef">return</span> func
+        a, b <span style=color:#f92672>=</span> b, a<span style=color:#f92672>+</span>b
+        <span style=color:#66d9ef>return</span> a
+    <span style=color:#66d9ef>return</span> func
 
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
-    f <span style="color:#f92672">=</span> fibonacci()
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
-        <span style="color:#66d9ef">print</span>(f())
-</code></pre></div><p>这两个实现有共通之处：调用 <code>Fibonacci()</code> 或 <code>fibonacci()</code> 得到一个可调用对象 f，它会更新历史值，然后计算当前值。</p>
-<p><code>Fibonacci()</code> 类的实例 f 在哪里存储历史值很明显：self.a 和 self.b 实例属性。但是闭包实现的 f 函数在哪里寻找 a 和 b 的历史值呢？</p>
-<p>在 <code>func</code> 函数中，a 和 b 为自由变量（free variable），指未在本地作用域中绑定的变量，审查返回的 func 对象，可以发现 Python 在 <code>f.__code__.co_freevars</code> 属性中保存自由变量的名称；在 <code>f.__closure__</code> 中的各个元素对应 <code>f.__code__.co_freevars</code> 中的一个名称，这些元素是 cell 对象，有个 cell_contents 属性，保存其值。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">print</span>(f<span style="color:#f92672">.</span>__code__<span style="color:#f92672">.</span>co_freevars) <span style="color:#75715e"># (&#39;a&#39;, &#39;b&#39;)</span>
-<span style="color:#66d9ef">print</span>(f<span style="color:#f92672">.</span>__closure__[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>cell_contents, f<span style="color:#f92672">.</span>__closure__[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>cell_contents) <span style="color:#75715e"># 34 55</span>
-</code></pre></div><p>所以，闭包是一种函数，它会保留定义函数时存在的自由变量的绑定，这样调用函数时，虽然定义作用域不可用了，但是仍能使用那些绑定。</p>
-<p>Go 语言也一样，在<a href="https://tour.golang.org/moretypes/25">上一节</a>的学习中，介绍了闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用变量的值，换句话说该函数被这些变量「绑定」在一起。</p>
-<p>Go 语言实现：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
+    f <span style=color:#f92672>=</span> fibonacci()
+    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>10</span>):
+        <span style=color:#66d9ef>print</span>(f())
+</code></pre></div><p>这两个实现有共通之处：调用 <code>Fibonacci()</code> 或 <code>fibonacci()</code> 得到一个可调用对象 f，它会更新历史值，然后计算当前值。</p><p><code>Fibonacci()</code> 类的实例 f 在哪里存储历史值很明显：self.a 和 self.b 实例属性。但是闭包实现的 f 函数在哪里寻找 a 和 b 的历史值呢？</p><p>在 <code>func</code> 函数中，a 和 b 为自由变量（free variable），指未在本地作用域中绑定的变量，审查返回的 func 对象，可以发现 Python 在 <code>f.__code__.co_freevars</code> 属性中保存自由变量的名称；在 <code>f.__closure__</code> 中的各个元素对应 <code>f.__code__.co_freevars</code> 中的一个名称，这些元素是 cell 对象，有个 cell_contents 属性，保存其值。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>print</span>(f<span style=color:#f92672>.</span>__code__<span style=color:#f92672>.</span>co_freevars) <span style=color:#75715e># (&#39;a&#39;, &#39;b&#39;)</span>
+<span style=color:#66d9ef>print</span>(f<span style=color:#f92672>.</span>__closure__[<span style=color:#ae81ff>0</span>]<span style=color:#f92672>.</span>cell_contents, f<span style=color:#f92672>.</span>__closure__[<span style=color:#ae81ff>1</span>]<span style=color:#f92672>.</span>cell_contents) <span style=color:#75715e># 34 55</span>
+</code></pre></div><p>所以，闭包是一种函数，它会保留定义函数时存在的自由变量的绑定，这样调用函数时，虽然定义作用域不可用了，但是仍能使用那些绑定。</p><p>Go 语言也一样，在<a href=https://tour.golang.org/moretypes/25>上一节</a>的学习中，介绍了闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用变量的值，换句话说该函数被这些变量「绑定」在一起。</p><p>Go 语言实现：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
 
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;fmt&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
 
-<span style="color:#75715e">// fibonacci is a function that returns
-</span><span style="color:#75715e">// a function that returns an int.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">fibonacci</span>() <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>
-	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">int</span> {
-		<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> = <span style="color:#a6e22e">b</span>, <span style="color:#a6e22e">a</span><span style="color:#f92672">+</span><span style="color:#a6e22e">b</span>
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span>
+<span style=color:#75715e>// fibonacci is a function that returns
+</span><span style=color:#75715e>// a function that returns an int.
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>fibonacci</span>() <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>int</span> {
+	<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>
+	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>int</span> {
+		<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span> = <span style=color:#a6e22e>b</span>, <span style=color:#a6e22e>a</span><span style=color:#f92672>+</span><span style=color:#a6e22e>b</span>
+		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>a</span>
 	}
 }
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fibonacci</span>()
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">10</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">f</span>())
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+	<span style=color:#a6e22e>f</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>fibonacci</span>()
+	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#ae81ff>10</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>f</span>())
 	}
 }
-</code></pre></div><h3 id="2-思考">2. 思考</h3>
-<p><strong>Q：为什么 Python 闭包中的 func 中比 Go 闭包中多了一个 <code>nolocal</code> 变量声明？</strong></p>
-<p>在上次的 <a href="../exercise-maps/">exercise-maps</a> 中已经有了解答：</p>
-<p>Python 中的数字、字符串、元组等类型是不可变的，只能读取，不能更新。如果尝试绑定，比如 a = a + 1，其实会隐式创建局部变量 a。这样 a 就不是自由变量了，因此不会保存在比包中。</p>
-<p>所以 Python3 引入了 nonlocal 声明，它的作用是把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。如果为 nonlocal 声明的变量赋予新值，闭包中保存的绑定会更新。</p>
-<p>而 Go 中的数字类型是可变的，就不存在这个问题。</p>
-<h3 id="3-参考">3. 参考</h3>
-<p>A Tour of Go 的 Github 仓库中的<a href="https://github.com/golang/tour/blob/master/solutions/fib.go">答案</a>。</p>
-<p>这次也翻了之前看的 《流畅的 Python》，现在看也感觉还是很有收获。</p>
-			</div>
-		</article>
-	</main>
-<aside>
-	<div>
-		<div>
-			<h3>最近文章</h3>
-		</div>
-		<div>
-			<ul>
-				
-				<li><a href="/posts/go/tour.golang.org/exercise-fibonacci-closure/">A Tour of Go - Exercise: Fibonacci closure</a></li>
-				
-				<li><a href="/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/">Jenkins Pipeline - Groovy 知识点</a></li>
-				
-				<li><a href="/posts/go/tour.golang.org/exercise-maps/">A Tour of Go - Exercise: Maps</a></li>
-				
-				<li><a href="/posts/go/tour.golang.org/exercise-slices/">A Tour of Go - Exercise: Slices</a></li>
-				
-				<li><a href="/posts/go/tour.golang.org/exercise-loops-and-functions/">A Tour of Go - Exercise: Loops and Functions</a></li>
-				
-			</ul>
-		</div>
-	</div>
-</aside>
-
-
-	<footer>
-	<p>| &copy; 2020 <a href="https://jugggao.github.io/"><b>剑十三</b></a> |
-	<a href="https://github.com/jugggao"><b>Github</b></a> |
-	</p>
-</footer>
-
-</body>
-</html>
+</code></pre></div><h3 id=2-思考>2. 思考</h3><p><strong>Q：为什么 Python 闭包中的 func 中比 Go 闭包中多了一个 <code>nolocal</code> 变量声明？</strong></p><p>在上次的 <a href=../exercise-maps/>exercise-maps</a> 中已经有了解答：</p><p>Python 中的数字、字符串、元组等类型是不可变的，只能读取，不能更新。如果尝试绑定，比如 a = a + 1，其实会隐式创建局部变量 a。这样 a 就不是自由变量了，因此不会保存在比包中。</p><p>所以 Python3 引入了 nonlocal 声明，它的作用是把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。如果为 nonlocal 声明的变量赋予新值，闭包中保存的绑定会更新。</p><p>而 Go 中的数字类型是可变的，就不存在这个问题。</p><h3 id=3-参考>3. 参考</h3><p>A Tour of Go 的 Github 仓库中的<a href=https://github.com/golang/tour/blob/master/solutions/fib.go>答案</a>。</p><p>这次也翻了之前看的 《流畅的 Python》，现在看也感觉还是很有收获。</p></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li><li><a href=/posts/go/tour.golang.org/exercise-slices/>A Tour of Go - Exercise: Slices</a></li><li><a href=/posts/go/tour.golang.org/exercise-loops-and-functions/>A Tour of Go - Exercise: Loops and Functions</a></li></ul></div></div></aside><footer><p>| &copy; 2020 <a href=https://jugggao.github.io/><b>剑十三</b></a> |
+<a href=https://github.com/jugggao><b>Github</b></a> |</p></footer></body></html>
