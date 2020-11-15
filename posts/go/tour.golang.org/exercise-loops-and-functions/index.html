@@ -1,8 +1,8 @@
-<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><style>a{text-decoration:none}</style><title>A Tour of Go - Exercise: Loops and Functions</title><link rel=stylesheet href=/css/style.css></head><body><header>------------<br>-- <a href=https://jugggao.github.io/>剑十三</a> --<br>------------<div style=float:right>与其感慨路难行，不如马上出发</div><br><p><nav>| <a href=/><b>主页</b></a> |
-<a href=/posts/><b>文档</b></a> |
-<a href=/categories/><b>分类</b></a> |
-<a href=/tags/><b>标签</b></a> |
-<a href=/about/><b>关于</b></a> |</nav></p></header><main><article><h1>A Tour of Go - Exercise: Loops and Functions</h1><b><time>09.11.2020</time></b> |
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><style>a{text-decoration:none}</style><title>A Tour of Go - Exercise: Loops and Functions</title><link rel=stylesheet href=/css/style.css></head><body><header><a style=font-size:24px;font-family:宋体;float:contour;font-weight:700 class=header-title href=https://jugggao.github.io/>剑十三</a><br><div style=float:right;font-size:15px;font-weight:700>与其感慨路难行，不如马上出发</div><br><a class=nav href=/>主页.</a>
+<a class=nav href=/posts/>文档.</a>
+<a class=nav href=/categories/>分类.</a>
+<a class=nav href=/tags/>标签.</a>
+<a class=nav href=/about/>关于.</a></nav></p></header><main><article><h1>A Tour of Go - Exercise: Loops and Functions</h1><b><time>09.11.2020</time></b> |
 <a href=/tags/go>Go</a>.
 <a href=/tags/a-tour-of-go>A Tour of Go</a>.
 <a href=/tags/exercise>Exercise</a>.<div><h3 id=exercise-loops-and-functionshttpstourgolangorgflowcontrol8><a href=https://tour.golang.org/flowcontrol/8>Exercise: Loops and Functions</a></h3><p>As a way to play with functions and loops, let&rsquo;s implement a square root function: given a number x, we want to find the number z for which z² is most nearly x.</p><p>Computers typically compute the square root of x using a loop. Starting with some guess z, we can adjust z based on how close z² is to x, producing a better guess:</p><pre><code>z -= (z*z - x) / (2*z)
@@ -63,5 +63,5 @@ z := float64(1)
 	mine, theirs <span style=color:#ff79c6>:=</span> <span style=color:#50fa7b>Sqrt</span>(x), math.<span style=color:#50fa7b>Sqrt</span>(x)
     fmt.<span style=color:#50fa7b>Println</span>(mine, theirs, mine<span style=color:#ff79c6>-</span>theirs)
 }
-</code></pre></div><p>官方的答案可以自动调整其循环次数，即当精度达到某一程度后就停止循环，而停止循环的条件则是上个值和下个值之间的差值小于 <code>1e-6</code>。</p></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li></ul></div></div></aside><footer><p>| &copy; 2020 <a href=https://jugggao.github.io/><b>剑十三</b></a> |
-<a href=https://github.com/jugggao><b>Github</b></a> |</p></footer></body></html>
+</code></pre></div><p>官方的答案可以自动调整其循环次数，即当精度达到某一程度后就停止循环，而停止循环的条件则是上个值和下个值之间的差值小于 <code>1e-6</code>。</p></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
+<a href=https://github.com/jugggao><b>Github.</b></a></p></footer></body></html>
