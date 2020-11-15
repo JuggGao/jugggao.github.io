@@ -2,7 +2,16 @@
 <a href=/posts/><b>文档</b></a> |
 <a href=/categories/><b>分类</b></a> |
 <a href=/tags/><b>标签</b></a> |
-<a href=/about/><b>关于</b></a> |</nav></p></header><main><article><h1><a href=https://jugggao.github.io/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></h1><b>时间：</b><time>15.11.2020</time> |
+<a href=/about/><b>关于</b></a> |</nav></p></header><main><article><h1><a href=https://jugggao.github.io/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></h1><b>时间：</b><time>15.11.2020</time> |
+<b>分类：</b>
+<a href=/categories/go>Go.</a>
+|
+<b>标签：</b>
+<a href=/tags/go>Go.</a>
+<a href=/tags/a-tour-of-go>A Tour of Go.</a>
+<a href=/tags/exercise>Exercise.</a><div><h3 id=exercise-errorshttpstourgolangorgmethods20><a href=https://tour.golang.org/methods/20>Exercise: Errors</a></h3><p>Copy your Sqrt function from the <a href=https://tour.golang.org/flowcontrol/8>earlier exercise</a> and modify it to return an <code>error</code> value.</p><p><code>Sqrt</code> should return a non-nil error value when given a negative number, as it doesn&rsquo;t support complex numbers.</p><p>Create a new type</p><pre><code>type ErrNegativeSqrt float64
+</code></pre><p>and make it an error by giving it a</p><pre><code>func (e ErrNegativeSqrt) Error() string
+</code></pre><p>method such that <code>ErrNegativeSqrt(-2).Error()</code> returns <code>"cannot Sqrt negative number: -2"</code>.</p><p>Note: A call to <code>fmt.Sprint(e)</code> inside the <code>Error</code> method will send the program into an infinite loop. You can avoid this by converting e first: <code>fmt.Sprint(float64(e))</code>. Why?</p><p>Change your <code>Sqrt</code> function to return an <code>ErrNegativeSqrt</code> value when given a negative number.</p><a href=https://jugggao.github.io/posts/go/tour.golang.org/exercise-errors/>阅读全文...</a></div></article><article><h1><a href=https://jugggao.github.io/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></h1><b>时间：</b><time>15.11.2020</time> |
 <b>分类：</b>
 <a href=/categories/go>Go.</a>
 |
