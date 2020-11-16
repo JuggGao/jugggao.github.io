@@ -129,38 +129,38 @@ println <span style=color:#50fa7b>echo</span><span style=color:#ff79c6>()</span>
     <span style=color:#6272a4>// safe navigation + Groovy Truth to check
 </span><span style=color:#6272a4></span>    <span style=color:#ff79c6>assert</span> name<span style=color:#ff79c6>?.</span><span style=color:#50fa7b>size</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>&gt;</span> <span style=color:#bd93f9>3</span>
 <span style=color:#ff79c6>}</span>
-</code></pre></div></li></ul><h3 id=5-闭包>5. 闭包</h3><p>闭包是 Groovy 最强大的特性。</p><ul><li><p>闭包可以直接当成函数调用。</p><pre><code>// 定义闭包
-def codeBlock = {print &quot;hello closure&quot;}
-codeBlock()
-</code></pre></li><li><p>可以将闭包看作一个参数传递给另一个方法。</p><pre><code>def codeBlock = {print &quot;hello closure&quot;}
+</code></pre></div></li></ul><h3 id=5-闭包>5. 闭包</h3><p>闭包是 Groovy 最强大的特性。</p><ul><li><p>闭包可以直接当成函数调用。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#6272a4>// 定义闭包
+</span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> codeBlock <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>{</span>print <span style=color:#f1fa8c>&#34;hello closure&#34;</span><span style=color:#ff79c6>}</span>
+codeBlock<span style=color:#ff79c6>()</span>
+</code></pre></div></li><li><p>可以将闭包看作一个参数传递给另一个方法。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> codeBlock <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>{</span>print <span style=color:#f1fa8c>&#34;hello closure&#34;</span><span style=color:#ff79c6>}</span>
   
-// 定义 pipeline 函数，接受一个闭包参数
-def pipeline(closure) {
-    closure()
-}
-// 调用 pipeline 函数传入闭包参数
-pipeline(codeBlock)
-// 把定义闭包的语句去掉
-pipeline({print &quot;hello closure&quot;})
-// 括号也可以去掉
-pipeline {
-    print &quot;hello closure&quot;
-}
-</code></pre></li><li><p>闭包的另类用法。</p><pre><code>def stage(String name, closure) {
+<span style=color:#6272a4>// 定义 pipeline 函数，接受一个闭包参数
+</span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> <span style=color:#50fa7b>pipeline</span><span style=color:#ff79c6>(</span>closure<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+    closure<span style=color:#ff79c6>()</span>
+<span style=color:#ff79c6>}</span>
+<span style=color:#6272a4>// 调用 pipeline 函数传入闭包参数
+</span><span style=color:#6272a4></span>pipeline<span style=color:#ff79c6>(</span>codeBlock<span style=color:#ff79c6>)</span>
+<span style=color:#6272a4>// 把定义闭包的语句去掉
+</span><span style=color:#6272a4></span>pipeline<span style=color:#ff79c6>({</span>print <span style=color:#f1fa8c>&#34;hello closure&#34;</span><span style=color:#ff79c6>})</span>
+<span style=color:#6272a4>// 括号也可以去掉
+</span><span style=color:#6272a4></span>pipeline <span style=color:#ff79c6>{</span>
+    print <span style=color:#f1fa8c>&#34;hello closure&#34;</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div></li><li><p>闭包的另类用法。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> <span style=color:#50fa7b>stage</span><span style=color:#ff79c6>(</span>String name<span style=color:#ff79c6>,</span> closure<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
     println name
-    closure()
-}
-// 正常情况下，这样使用 stage 函数
-stage(&quot;stage name&quot;, {println &quot;hello closure&quot;})
-// 但是，Groovy 提供了另一种写法
-stage(&quot;stage name&quot;) {
-    println &quot;hello closure&quot;
-}
-</code></pre></li></ul><h3 id=6-类>6. 类</h3><p>Jenkins Pipeline 中大多编写的是脚本式的 Groovy 代码，一些通用功能或者模块会使用类来定义。</p><ul><li><p>Groovy 可以使用 Import 别名。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#ff79c6>import</span> java.util.List <span style=color:#ff79c6>as</span> jurist
+    <span style=color:#50fa7b>closure</span><span style=color:#ff79c6>()</span>
+<span style=color:#ff79c6>}</span>
+<span style=color:#6272a4>// 正常情况下，这样使用 stage 函数
+</span><span style=color:#6272a4></span>stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;stage name&#34;</span><span style=color:#ff79c6>,</span> <span style=color:#ff79c6>{</span>println <span style=color:#f1fa8c>&#34;hello closure&#34;</span><span style=color:#ff79c6>})</span>
+<span style=color:#6272a4>// 但是，Groovy 提供了另一种写法
+</span><span style=color:#6272a4></span>stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;stage name&#34;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+    println <span style=color:#f1fa8c>&#34;hello closure&#34;</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div></li></ul><h3 id=6-类>6. 类</h3><p>Jenkins Pipeline 中大多编写的是脚本式的 Groovy 代码，一些通用功能或者模块会使用类来定义。</p><ul><li><p>Groovy 可以使用 Import 别名。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#ff79c6>import</span> java.util.List <span style=color:#ff79c6>as</span> jurist
 <span style=color:#ff79c6>import</span> java.awt.List <span style=color:#ff79c6>as</span> aList
 <span style=color:#ff79c6>import</span> java.awt.WindowConstants <span style=color:#ff79c6>as</span> WC
 </code></pre></div></li><li><p>Groovy 可以引入静态方法。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#ff79c6>import</span> static pkg<span style=color:#ff79c6>.</span><span style=color:#50fa7b>SomeClass</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>foo</span>
 <span style=color:#50fa7b>foo</span><span style=color:#ff79c6>()</span>
-</code></pre></div></li><li><p>Groovy 检查某个对象的值是否为 null，可以使用 <code>?.</code> 安全取值。</p><pre><code>println order?.customer?.address
-</code></pre></li></ul></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
+</code></pre></div></li><li><p>Groovy 检查某个对象的值是否为 null，可以使用 <code>?.</code> 安全取值。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>println order<span style=color:#ff79c6>?.</span><span style=color:#50fa7b>customer</span><span style=color:#ff79c6>?.</span><span style=color:#50fa7b>address</span>
+</code></pre></div></li></ul></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
 <a href=https://github.com/jugggao><b>Github.</b></a></p></footer></body></html>
