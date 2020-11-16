@@ -9,7 +9,44 @@
 Date staticDate <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Date<span style=color:#ff79c6>()</span>
 <span style=color:#6272a4>// 可以用 var.class 获取变量类型
 </span><span style=color:#6272a4></span>println dynamicDate<span style=color:#ff79c6>.</span><span style=color:#50fa7b>class</span> <span style=color:#ff79c6>==</span> staticDate<span style=color:#ff79c6>.</span><span style=color:#50fa7b>class</span>
-</code></pre></div><p>如果声明了静态类型，就不能再改变该变量的类型。</p></li></ul><h3 id=2-作用域>2. 作用域</h3><p>在编写 Jenkins Pipeline 共享库的时候需要注意，跨 Stage 传参的时候就需要注意其参数的作用域。</p><ul><li><p>Groovy 类的作用域和 Java 相同。</p></li><li><p><strong>Groovy 脚本中的作用域分为绑定域和本地域。</strong></p><ul><li>绑定域：脚本内的全局作用域，相当于该脚本对象的成员变量。如果未定义变量，仅仅初始化但未声明，其作用域就是绑定域（与 JavaScript 中行为相同）。</li><li>本地域：脚本内的代码块。如果定义过变量，其作用域就是本地域。</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>String hello <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;hello&#34;</span>	<span style=color:#6272a4>// 定义变量，作用域是本地域
+</code></pre></div><p>如果声明了静态类型，就不能再改变该变量的类型。</p></li><li><p>Groovy 定义方法时，如果参数没有类型，可以省略 def。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>void</span> <span style=color:#50fa7b>doSomething</span><span style=color:#ff79c6>(</span>param1<span style=color:#ff79c6>,</span> param2<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span> <span style=color:#ff79c6>}</span>
+</code></pre></div></li><li><p>Groovy 定义构造器时，避免使用 def 关键字。</p><pre><code>builder.students {
+   student {
+      studentname 'Joe'
+      studentid '1'
+          
+      Marks(
+         Subject1: 10,
+         Subject2: 20,
+         Subject3: 30,
+      )
+   } 
+}
+</code></pre></li><li><p>Groovy 中，单引号引起来的字符串是java字符串，不能使用占位符来替换变量，双引号引起的字符串则是 Java 字符串或者 Groovy 字符串。</p></li><li><p>Groovy 中的 GString 提供了强大的格式化能力，可以避免使用 Java 的 <code>String.format()</code> 来格式化输出。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> version <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2.4</span>
+  
+<span style=color:#6272a4>// Java String：单引号中的是普通字符串
+</span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> javaString <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;Java&#39;</span>
+<span style=color:#8be9fd>def</span> javaString2 <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;Java $version&#39;</span>
+  
+<span style=color:#6272a4>// Groovy String：双引号中且有未被转义的 $ 的是 GString, 允许使用占位符
+</span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> groovyString <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Groovy v$version&#34;</span>
+<span style=color:#6272a4>// Java String：双引号中、有被转义的 $ 是普通字符串
+</span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> nonGroovyString <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Groovy v\$version&#34;</span>
+</code></pre></div><p>还有一种常用用法：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> <span style=color:#50fa7b>world</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>{</span>
+    <span style=color:#f1fa8c>&#34;world&#34;</span>
+<span style=color:#ff79c6>}</span>
+  
+println <span style=color:#f1fa8c>&#34;Hello ${world()}&#34;</span>
+</code></pre></div></li><li><p>Groovy 中字符串分行可以使用 <code>\</code> 或多行字符串 <code>"""</code> 来实现。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> version <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2.4</span>
+<span style=color:#8be9fd>def</span> verionInfo <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Groovy version \
+</span><span style=color:#f1fa8c>is v${version}&#34;</span>
+<span style=color:#8be9fd>def</span> verionInfo2 <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;&#34;&#34;Groovy
+</span><span style=color:#f1fa8c>    version
+</span><span style=color:#f1fa8c>    is
+</span><span style=color:#f1fa8c>    v${version}&#34;&#34;&#34;</span>
+println verionInfo
+println verionInfo2
+</code></pre></div></li></ul><h3 id=2-作用域>2. 作用域</h3><p>在编写 Jenkins Pipeline 共享库的时候需要注意，跨 Stage 传参的时候就需要注意其参数的作用域。</p><ul><li><p>Groovy 类的作用域和 Java 相同。</p></li><li><p><strong>Groovy 脚本中的作用域分为绑定域和本地域。</strong></p><ul><li>绑定域：脚本内的全局作用域，相当于该脚本对象的成员变量。如果未定义变量，仅仅初始化但未声明，其作用域就是绑定域（与 JavaScript 中行为相同）。</li><li>本地域：脚本内的代码块。如果定义过变量，其作用域就是本地域。</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>String hello <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;hello&#34;</span>	<span style=color:#6272a4>// 定义变量，作用域是本地域
 </span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> world <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;world&#34;</span>		<span style=color:#6272a4>//定义变量，作用域是本地域
 </span><span style=color:#6272a4></span>
 helloworld <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;hello world&#34;</span>	<span style=color:#6272a4>// 全局变量，作用域是绑定域
@@ -33,5 +70,97 @@ s<span style=color:#ff79c6>.</span><span style=color:#50fa7b>binding</span><span
 @Field List awe <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>[</span><span style=color:#bd93f9>1</span><span style=color:#ff79c6>,</span> <span style=color:#bd93f9>2</span><span style=color:#ff79c6>,</span> <span style=color:#bd93f9>3</span><span style=color:#ff79c6>]</span>
 <span style=color:#8be9fd>def</span> <span style=color:#50fa7b>awesum</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>{</span> awe<span style=color:#ff79c6>.</span><span style=color:#50fa7b>sum</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>}</span>
 <span style=color:#ff79c6>assert</span> <span style=color:#50fa7b>awesum</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>==</span> <span style=color:#bd93f9>6</span>
-</code></pre></div></li></ul></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
+</code></pre></div></li></ul><h3 id=3-集合>3. 集合</h3><ul><li><p>Groovy 中 List 和 Map 提供 <code>each()</code> 方法用于便捷访问。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> list <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>[</span><span style=color:#bd93f9>1</span><span style=color:#ff79c6>,</span> <span style=color:#bd93f9>2</span><span style=color:#ff79c6>,</span> <span style=color:#bd93f9>3</span><span style=color:#ff79c6>]</span>
+list<span style=color:#ff79c6>.</span><span style=color:#50fa7b>each</span> <span style=color:#ff79c6>{</span> num <span style=color:#ff79c6>-&gt;</span> println num <span style=color:#ff79c6>}</span>
+<span style=color:#6272a4>// 使用 it 变量进行迭代
+</span><span style=color:#6272a4></span>list<span style=color:#ff79c6>.</span><span style=color:#50fa7b>each</span> <span style=color:#ff79c6>{</span> println it <span style=color:#ff79c6>}</span>
+  
+<span style=color:#8be9fd>def</span> map <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>[</span><span style=color:#8be9fd;font-style:italic>a:</span> <span style=color:#bd93f9>1</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>b:</span> <span style=color:#bd93f9>2</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>c:</span> <span style=color:#bd93f9>3</span><span style=color:#ff79c6>]</span>
+map<span style=color:#ff79c6>.</span><span style=color:#50fa7b>each</span> <span style=color:#ff79c6>{</span> k<span style=color:#ff79c6>,</span> v <span style=color:#ff79c6>-&gt;</span> println <span style=color:#f1fa8c>&#34;$k $v&#34;</span> <span style=color:#ff79c6>}</span>
+<span style=color:#6272a4>// 使用 it 变量进行迭代
+</span><span style=color:#6272a4></span>map<span style=color:#ff79c6>.</span><span style=color:#50fa7b>each</span> <span style=color:#ff79c6>{</span> println <span style=color:#f1fa8c>&#34;$it.key $it.value&#34;</span> <span style=color:#ff79c6>}</span>
+</code></pre></div></li><li><p>Groovy Map 集合的 Key 默认是字符串类型，可以省略双引号。</p></li><li><p>Groovy 可以用 () 将 Keys 包起来插入一个变量或者类作为 Key。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> language <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Groovy&#34;</span>
+<span style=color:#8be9fd>def</span> map <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>[(</span>language<span style=color:#ff79c6>):</span> <span style=color:#bd93f9>2.4</span> <span style=color:#ff79c6>]</span>
+</code></pre></div></li></ul><h3 id=4-运算符>4. 运算符</h3><ul><li>Groovy 中三目运算符通常来给定变量默认值。<div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> result <span style=color:#ff79c6>=</span> name <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>null</span> <span style=color:#ff79c6>?</span> name <span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#34;Unknown&#34;</span>
+</code></pre></div><p>可以进行简写：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> result <span style=color:#ff79c6>=</span> name <span style=color:#ff79c6>?:</span> <span style=color:#f1fa8c>&#34;Unknown&#34;</span>
+</code></pre></div></li></ul><h3 id=4-方法>4. 方法</h3><ul><li><p>Groov 方法中最后一句表达式可作为返回值返回，而不需要 return 关键字。</p></li><li><p>Groovy 允许在顶级表达式中省略圆括号，比如 println &ldquo;Hello World&rdquo;。</p><pre><code>def echo(a) {
+    a
+}
+echo 1
+
+def add(a, b) {
+    a + b
+}
+add 1, 2
+</code></pre></li><li><p>Groovy 支持命名参数。但是和 Python 中的命名参数有很大区别。Groovy 命名参数并不是真正意义上的命名参数，实际上，Groovy 仅仅是让方法的 Map 参数的 Key 可以在方法中直接使用而已（以 Map.Key 这种方式来访问参数）。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> <span style=color:#50fa7b>add</span><span style=color:#ff79c6>(</span>map<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+    <span style=color:#6272a4>// 为所有参数设置默认值
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>[</span><span style=color:#f1fa8c>&#39;a&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;b&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;c&#39;</span><span style=color:#ff79c6>].</span><span style=color:#50fa7b>each</span> <span style=color:#ff79c6>{</span> map<span style=color:#ff79c6>.</span><span style=color:#50fa7b>get</span><span style=color:#ff79c6>(</span>it<span style=color:#ff79c6>,</span> <span style=color:#bd93f9>0</span><span style=color:#ff79c6>)}</span>
+    <span style=color:#ff79c6>return</span> map<span style=color:#ff79c6>.</span><span style=color:#50fa7b>a</span> <span style=color:#ff79c6>+</span> map<span style=color:#ff79c6>.</span><span style=color:#50fa7b>b</span>
+<span style=color:#ff79c6>}</span>
+  
+println <span style=color:#ff79c6>(</span>add <span style=color:#8be9fd;font-style:italic>b:</span><span style=color:#bd93f9>2</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>a:</span><span style=color:#bd93f9>1</span><span style=color:#ff79c6>)</span>
+println <span style=color:#ff79c6>(</span>add <span style=color:#8be9fd;font-style:italic>a:</span><span style=color:#bd93f9>1</span><span style=color:#ff79c6>)</span>
+</code></pre></div></li><li><p>Groovy 支持默认参数。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> <span style=color:#50fa7b>echo</span><span style=color:#ff79c6>(</span>num <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1</span><span style=color:#ff79c6>){</span>
+    num
+<span style=color:#ff79c6>}</span>
+println <span style=color:#50fa7b>echo</span><span style=color:#ff79c6>()</span>
+</code></pre></div></li><li><p>Groovy 的 Switch 方法更具实用性，可以接受更多的类型。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> x <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1.23</span>
+<span style=color:#8be9fd>def</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;&#34;</span>
+<span style=color:#ff79c6>switch</span> <span style=color:#ff79c6>(</span>x<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+    <span style=color:#ff79c6>case</span> <span style=color:#f1fa8c>&#34;foo&#34;</span><span style=color:#ff79c6>:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;found foo&#34;</span>
+    <span style=color:#6272a4>// lets fall through
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>case</span> <span style=color:#f1fa8c>&#34;bar&#34;</span><span style=color:#ff79c6>:</span> result <span style=color:#ff79c6>+=</span> <span style=color:#f1fa8c>&#34;bar&#34;</span>
+    <span style=color:#ff79c6>case</span> <span style=color:#ff79c6>[</span><span style=color:#bd93f9>4</span><span style=color:#ff79c6>,</span> <span style=color:#bd93f9>5</span><span style=color:#ff79c6>,</span> <span style=color:#bd93f9>6</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;inList&#39;</span><span style=color:#ff79c6>]:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;list&#34;</span>
+    <span style=color:#ff79c6>break</span>
+    <span style=color:#ff79c6>case</span> <span style=color:#bd93f9>12</span><span style=color:#ff79c6>..</span><span style=color:#bd93f9>30</span><span style=color:#ff79c6>:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;range&#34;</span>
+    <span style=color:#ff79c6>break</span>
+    <span style=color:#ff79c6>case</span> <span style=color:#8be9fd;font-style:italic>Integer:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;integer&#34;</span>
+    <span style=color:#ff79c6>break</span>
+    <span style=color:#ff79c6>case</span> <span style=color:#8be9fd;font-style:italic>Number:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;number&#34;</span>
+    <span style=color:#ff79c6>break</span>
+    <span style=color:#ff79c6>case</span> <span style=color:#ff79c6>{</span> it <span style=color:#ff79c6>&gt;</span> <span style=color:#bd93f9>3</span> <span style=color:#ff79c6>}:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;number &gt; 3&#34;</span>
+    <span style=color:#ff79c6>break</span>
+    <span style=color:#ff79c6>default</span><span style=color:#ff79c6>:</span> result <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;default&#34;</span>
+<span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>assert</span> result <span style=color:#ff79c6>==</span> <span style=color:#f1fa8c>&#34;number&#34;</span>
+</code></pre></div></li><li><p>Groovy 检查方法传入的参数是否为空，可以使用 assert 检查。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> <span style=color:#50fa7b>check</span><span style=color:#ff79c6>(</span>String name<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+    <span style=color:#6272a4>// name non-null and non-empty according to Groovy Truth
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>assert</span> name
+    <span style=color:#6272a4>// safe navigation + Groovy Truth to check
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>assert</span> name<span style=color:#ff79c6>?.</span><span style=color:#50fa7b>size</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>&gt;</span> <span style=color:#bd93f9>3</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div></li></ul><h3 id=5-闭包>5. 闭包</h3><p>闭包是 Groovy 最强大的特性。</p><ul><li><p>闭包可以直接当成函数调用。</p><pre><code>// 定义闭包
+def codeBlock = {print &quot;hello closure&quot;}
+codeBlock()
+</code></pre></li><li><p>可以将闭包看作一个参数传递给另一个方法。</p><pre><code>def codeBlock = {print &quot;hello closure&quot;}
+  
+// 定义 pipeline 函数，接受一个闭包参数
+def pipeline(closure) {
+    closure()
+}
+// 调用 pipeline 函数传入闭包参数
+pipeline(codeBlock)
+// 把定义闭包的语句去掉
+pipeline({print &quot;hello closure&quot;})
+// 括号也可以去掉
+pipeline {
+    print &quot;hello closure&quot;
+}
+</code></pre></li><li><p>闭包的另类用法。</p><pre><code>def stage(String name, closure) {
+    println name
+    closure()
+}
+// 正常情况下，这样使用 stage 函数
+stage(&quot;stage name&quot;, {println &quot;hello closure&quot;})
+// 但是，Groovy 提供了另一种写法
+stage(&quot;stage name&quot;) {
+    println &quot;hello closure&quot;
+}
+</code></pre></li></ul><h3 id=6-类>6. 类</h3><p>Jenkins Pipeline 中大多编写的是脚本式的 Groovy 代码，一些通用功能或者模块会使用类来定义。</p><ul><li><p>Groovy 可以使用 Import 别名。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#ff79c6>import</span> java.util.List <span style=color:#ff79c6>as</span> jurist
+<span style=color:#ff79c6>import</span> java.awt.List <span style=color:#ff79c6>as</span> aList
+<span style=color:#ff79c6>import</span> java.awt.WindowConstants <span style=color:#ff79c6>as</span> WC
+</code></pre></div></li><li><p>Groovy 可以引入静态方法。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#ff79c6>import</span> static pkg<span style=color:#ff79c6>.</span><span style=color:#50fa7b>SomeClass</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>foo</span>
+<span style=color:#50fa7b>foo</span><span style=color:#ff79c6>()</span>
+</code></pre></div></li><li><p>Groovy 检查某个对象的值是否为 null，可以使用 <code>?.</code> 安全取值。</p><pre><code>println order?.customer?.address
+</code></pre></li></ul></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li><li><a href=/posts/go/tour.golang.org/exercise-maps/>A Tour of Go - Exercise: Maps</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
 <a href=https://github.com/jugggao><b>Github.</b></a></p></footer></body></html>
