@@ -1,0 +1,488 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><style>a{text-decoration:none}</style><title>Jenkins Pipeline - 声明式语法</title><link rel=stylesheet href=/css/style.css></head><body><header><a style=font-size:24px;font-family:宋体;float:contour;font-weight:700 class=header-title href=https://jugggao.github.io/>剑十三</a><br><div style=float:right;font-size:15px;font-weight:700>与其感慨路难行，不如马上出发</div><br><a class=nav href=/>主页.</a>
+<a class=nav href=/posts/>文档.</a>
+<a class=nav href=/categories/>分类.</a>
+<a class=nav href=/tags/>标签.</a>
+<a class=nav href=/about/>关于.</a></nav></p></header><main><article><h1>Jenkins Pipeline - 声明式语法</h1><b><time>16.11.2020</time></b> |
+<a href=/tags/jenkins>Jenkins</a>.
+<a href=/tags/jenkins-pipeline>Jenkins Pipeline</a>.<div><h3 id=jenkins-pipeline-声明式语法>Jenkins Pipeline 声明式语法</h3><p>Jenkins Pipeline 有两种语法风格：</p><ul><li>声明式管道语法（Declarative pipeline syntax）</li><li>脚本式管道语法（Scripted pipeline syntax）</li></ul><p>脚本式管道语法以 Groovy 语言为基础，语法结构同 Groovy 相同。
+由于 Groovy 不适合所有初学者。所以 Jenkins 团队为编写 Jenkins 流水线提供一种更简单的声明式管道。</p><p>这两种语法的区别在于语法和灵活性：</p><ul><li>声明式管道语法鼓励采用<a href=https://en.wikipedia.org/wiki/Declarative_programming>声明式编程模型</a>；脚本式管道语法遵循<a href=https://en.wikipedia.org/wiki/Imperative_programming>命令式编程模型</a>。</li><li>声明式管道通过更严格和预定义的结构对用户施加了限制，这对于比较简单的持续交付流程来说是更理想的选择；而脚本式管道对于语法和结构唯一的限制是由 Groovy 子集本身定义的，脚本式管道几乎可以做任何事情，因此对于有更复杂的要求的用户或者对 Groovy 语言很熟练的用户来说是理想的选择。</li></ul><p><strong>关于如何选择声明式语法或者脚本式语法？</strong></p><ul><li>如果是 Jenkins 新手可以通过声明式管道语法入门，声明式管道提供了一些保护栏（框架），因此在刚开始学习的时候不会总出错，而且调试起来比较容易。另外，声明式管道的官方文档更详细。</li><li>如果是 Jenkins 高级用户或者对 Groovy 语言使用熟练，在工作中面对复杂的持续交付的场景，并且需要将逻辑复杂的管道代码模块化，那么脚本式管道结合共享库会更适合你。</li><li>如果是 Jenkins 管理员，则可能更希望坚持使用声明式管道，可以为使用者提供最佳的整体体验。并且能使其他的新同事更容易加入 Jenkins Pipeline 编写工作当中。</li></ul><p>总之，仁者见仁，智者见智。无论怎么选择，只需要确保<strong>一致性</strong>即可。</p><p>那就先从简单、易读的声明式语法说起。</p><h2 id=1-框架>1. 框架</h2><p>在 vscode 中安装了 Jenkinsfile Support 插件后，输入 pipeline 回车会自动补全以下内容：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline<span style=color:#ff79c6>{</span>
+    agent<span style=color:#ff79c6>{</span>
+        label <span style=color:#f1fa8c>&#34;node&#34;</span>
+    <span style=color:#ff79c6>}</span>
+    stages<span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;A&#34;</span><span style=color:#ff79c6>){</span>
+            steps<span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;========executing A========&#34;</span>
+            <span style=color:#ff79c6>}</span>
+            post<span style=color:#ff79c6>{</span>
+                always<span style=color:#ff79c6>{</span>
+                    echo <span style=color:#f1fa8c>&#34;========always========&#34;</span>
+                <span style=color:#ff79c6>}</span>
+                success<span style=color:#ff79c6>{</span>
+                    echo <span style=color:#f1fa8c>&#34;========A executed successfully========&#34;</span>
+                <span style=color:#ff79c6>}</span>
+                failure<span style=color:#ff79c6>{</span>
+                    echo <span style=color:#f1fa8c>&#34;========A execution failed========&#34;</span>
+                <span style=color:#ff79c6>}</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    post<span style=color:#ff79c6>{</span>
+        always<span style=color:#ff79c6>{</span>
+            echo <span style=color:#f1fa8c>&#34;========always========&#34;</span>
+        <span style=color:#ff79c6>}</span>
+        success<span style=color:#ff79c6>{</span>
+            echo <span style=color:#f1fa8c>&#34;========pipeline executed successfully ========&#34;</span>
+        <span style=color:#ff79c6>}</span>
+        failure<span style=color:#ff79c6>{</span>
+            echo <span style=color:#f1fa8c>&#34;========pipeline execution failed========&#34;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>这是一个声明式语法的基础框架，其中包含了 4 个部分：</p><ul><li><strong>管道块（pipeline block）</strong><ul><li><strong>pipline</strong>：用于声明表示流水线的标识。</li></ul></li><li><strong>节（sections）</strong><ul><li>**agent：**用于指定当前流水线将要执行的位置。</li><li><strong>post</strong>：根据流水线或实际构建阶段的完成情况而运行指定的步骤。</li><li><strong>stages</strong>：用于表示流水线各个步骤的声明。</li><li><strong>steps</strong>：用于指定实际构建阶段的具体步骤。</li></ul></li><li><strong>指令（directives）</strong><ul><li><strong>environment</strong>：用于设置环境变量。</li><li><strong>options</strong>：用于配置 Jenkins 应用本身的一些配置项。</li><li><strong>parameters</strong>：用于配置参数化构建的参数列表。</li><li><strong>triggers</strong>：用于定义流水线触发的一些机制与条件。</li><li><strong>stage</strong>：用于表示实际构建的阶段，每个阶段执行不同的任务。</li><li><strong>tools</strong>：用于定义部署流程中常用的一些工具。</li><li><strong>input</strong>：用于在构建过程中指定交互式处理的步骤。</li><li><strong>when</strong>：用于指定允许流水线根据特定的条件决定是否执行的阶段。</li></ul></li><li><strong>步骤（steps）</strong><ul><li>Jenkins 提供了声明式语法可以引用的<a href=https://jenkins.io/doc/pipeline/steps/>所有步骤的列表</a>。</li><li><strong>script</strong>：用于执行脚本式管道语法步骤。</li></ul></li></ul><p>接下来对这 4 个部分逐步简单说明并举例。</p><blockquote><p>接下来只对我日常会用到的一些指令或参数做解释并举例。
+不会对<a href=https://jenkins.io/doc/book/pipeline/syntax/>官方文档</a>做完整的翻译。</p></blockquote><h2 id=2-管道块pipeline-block>2. 管道块（pipeline block）</h2><h3 id=21-pipeline>2.1 Pipeline</h3><p>所有有效的声明式管道都必须包含在 pipeline 块中。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+  <span style=color:#6272a4>/* 插入声明式语法管道 */</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>pipeline 块表示这里将采用声明式的语法风格，不包含其他的特殊含义。
+pipeline 块只能由节段（sections）、指令（directives）、指令（directives）或赋值语句组成。
+属性引用语句被视为无参方法调用，例如 <code>input</code> 视为 <code>input()</code>。</p><h2 id=3-节sections>3. 节（sections）</h2><h3 id=31-agenthttpsjenkinsiodocbookpipelinesyntaxagent>3.1 <a href=https://jenkins.io/doc/book/pipeline/syntax/#agent>agent</a></h3><p><code>agent</code> 部分表示当前流水线在什么环境下运行。</p><p>允许出现的位置： <code>pipeline</code> 块和 <code>stage</code> 阶段中。</p><p>常见的使用情况如下：</p><h4 id=场景一使用-node-指定从节点执行任务>场景一：使用 node 指定从节点执行任务</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/293995/1587207650803-8eb81701-2def-4e6c-a8e9-0420c050fa0a.png#align=left&display=inline&height=73&margin=%5Bobject%20Object%5D&name=image.png&originHeight=73&originWidth=927&size=13563&status=done&style=stroke&width=927" alt=image.png></p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#6272a4>// 指定在 ansible 节点上运行 ansible playbook
+</span><span style=color:#6272a4></span>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        node <span style=color:#ff79c6>{</span>
+            label <span style=color:#f1fa8c>&#39;ansible&#39;</span>
+            customWorkspace <span style=color:#f1fa8c>&#39;/data/jenkins/mysql-transfer&#39;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;备份数据&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                ansiblePlaybook<span style=color:#ff79c6>(</span>
+                    <span style=color:#8be9fd;font-style:italic>playbook:</span> <span style=color:#f1fa8c>&#39;mysql-transfer.yaml&#39;</span><span style=color:#ff79c6>,</span>
+                    <span style=color:#8be9fd;font-style:italic>inventory:</span> <span style=color:#f1fa8c>&#39;hosts&#39;</span><span style=color:#ff79c6>,</span>
+                    <span style=color:#8be9fd;font-style:italic>credentialsId:</span> <span style=color:#f1fa8c>&#39;sample-ssh-key&#39;</span><span style=color:#ff79c6>,</span>
+                    <span style=color:#8be9fd;font-style:italic>tags:</span> <span style=color:#f1fa8c>&#39;mysql_backup&#39;</span>
+                <span style=color:#ff79c6>)</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h4 id=场景二使用-docker-在容器中执行任务>场景二：使用 docker 在容器中执行任务</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#6272a4>// 使用 docker 编译前端代码
+</span><span style=color:#6272a4></span>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        docker <span style=color:#ff79c6>{</span>
+            lable <span style=color:#f1fa8c>&#39;docker-jnlp-node&#39;</span>
+            image <span style=color:#f1fa8c>&#39;harbor.ambow.com/jenkins/jnlp-node-slave&#39;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;构建&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span> 
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;npm install --registry=https://registry.npm.taobao.org&#39;</span> 
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h4 id=场景三不同的步骤使用不同的容器>场景三：不同的步骤使用不同的容器</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#6272a4>// 构建阶段使用 jnlp-node-slave 容器
+</span><span style=color:#6272a4>// 部署阶段使用 ansible 容器
+</span><span style=color:#6272a4></span>pipeline <span style=color:#ff79c6>{</span>
+    agent none
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;构建&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span> 
+            agent <span style=color:#ff79c6>{</span>
+                docker <span style=color:#ff79c6>{</span>
+                    image <span style=color:#f1fa8c>&#39;harbor.ambow.com/jenkins/jnlp-node-slave&#39;</span>
+                    args <span style=color:#f1fa8c>&#39;-v /root/.npm:/root/.npm&#39;</span>
+                <span style=color:#ff79c6>}</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;npm install --registry=https://registry.npm.taobao.org&#39;</span> 
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;部署&#39;</span><span style=color:#ff79c6>){</span>
+            agent <span style=color:#ff79c6>{</span>
+                docker <span style=color:#ff79c6>{</span>
+                    image <span style=color:#f1fa8c>&#39;harbor.ambow.com/tools/ansible&#39;</span>
+                <span style=color:#ff79c6>}</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;echo &#34;通过 ansbile 进行部署&#34;&#39;</span> 
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><blockquote><p>使用容器时，Jenkins 会默认将 <code>$WORKSPACE</code> 挂载至容器中，因此各种操作直接基于当前目录即可。</p></blockquote><h4 id=场景四使用-kubernetes-启动临时-pod-运行任务>场景四：使用 kubernetes 启动临时 Pod 运行任务</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        kubernetes <span style=color:#ff79c6>{</span>
+            defaultContainer <span style=color:#f1fa8c>&#39;jnlp&#39;</span>
+            yaml <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span><span style=color:#f1fa8c>kind: Pod
+</span><span style=color:#f1fa8c>apiVersion: v1
+</span><span style=color:#f1fa8c>metadata:
+</span><span style=color:#f1fa8c>  name: jnlp
+</span><span style=color:#f1fa8c>  namespace: jenkins
+</span><span style=color:#f1fa8c>  labels:
+</span><span style=color:#f1fa8c>    app: jnlp-slave
+</span><span style=color:#f1fa8c>spec:
+</span><span style=color:#f1fa8c>  containers:
+</span><span style=color:#f1fa8c>  - name: jnlp
+</span><span style=color:#f1fa8c>    image: harbor.ambow.com/jenkins/jnlp-slave:latest
+</span><span style=color:#f1fa8c>    workingDir: /home/jenkins
+</span><span style=color:#f1fa8c>    tty: true
+</span><span style=color:#f1fa8c>    volumeMounts:
+</span><span style=color:#f1fa8c>    - mountPath: /var/run/docker.sock
+</span><span style=color:#f1fa8c>      name: docker-sock
+</span><span style=color:#f1fa8c>      readOnly: true
+</span><span style=color:#f1fa8c>    - mountPath: /home/jenkins/.kube
+</span><span style=color:#f1fa8c>      name: kubectl-admin
+</span><span style=color:#f1fa8c>      readOnly: true
+</span><span style=color:#f1fa8c>    - mountPath: /home/jenkins/agent/workspace
+</span><span style=color:#f1fa8c>      name: workspace-maven-data
+</span><span style=color:#f1fa8c>      subPath: workspace
+</span><span style=color:#f1fa8c>    - mountPath: /root/.m2
+</span><span style=color:#f1fa8c>      name: workspace-maven-data
+</span><span style=color:#f1fa8c>      subPath: .m2
+</span><span style=color:#f1fa8c>  volumes:
+</span><span style=color:#f1fa8c>  - name: docker-sock
+</span><span style=color:#f1fa8c>    hostPath:
+</span><span style=color:#f1fa8c>      path: /var/run/docker.sock
+</span><span style=color:#f1fa8c>  - name: kubectl-admin
+</span><span style=color:#f1fa8c>    persistentVolumeClaim:
+</span><span style=color:#f1fa8c>      claimName: kubectl-admin-pvc
+</span><span style=color:#f1fa8c>  - name: workspace-maven-data
+</span><span style=color:#f1fa8c>    persistentVolumeClaim:
+</span><span style=color:#f1fa8c>      claimName: jenkins-pvc
+</span><span style=color:#f1fa8c>&#34;&#34;&#34;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h3 id=32-posthttpsjenkinsiodocbookpipelinesyntaxpost>3.2 <a href=https://jenkins.io/doc/book/pipeline/syntax/#post>post</a></h3><p><code>post</code> 部分定义一个或多个 <code>steps</code>，而 <code>setps</code> 中定义的步骤则取决于流水线或阶段完成状态。</p><p>允许出现的位置： <code>pipeline</code> 块和 <code>stage</code> 块内。</p><p>常见的状态有：</p><ul><li><strong>always</strong>：无论流水线或阶段的完成状态如何，都允许在 <code>post</code> 部分运行该步骤。</li><li><strong>changed</strong>：只有当前流水线或阶段的完成状态与它之前的运行不同时，才允许在 <code>post</code> 部分运行该步骤。</li><li><strong>failure</strong>：只有当前流水线或阶段完成状态为「failure」，才运行该步骤。通常 WebUI 为红色。</li><li><strong>success</strong>：只有当前流水线或阶段完成状态为「success」，才运行该步骤。通常 WebUI 为蓝色或绿色。</li><li><strong>unstable</strong>：只有当前流水线或阶段完成状态为「unstable」，才运行该步骤。通常由于测试失败，代码违规等情况造成。通常 WebUI 为黄色。</li><li><strong>unsuccessful</strong>：只要当前流水线或阶段完成状态不为「success」，才运行该步骤。WebUI 不是蓝色或绿色。</li><li><strong>aborted</strong>：只有当前流水线或阶段完成状态为「aborted」，才运行在 post 部分运行该步骤。通常由于流水线被手动关闭或者在交互式过程中被关闭。通常 WebUI 为灰色。</li></ul><p>还有几种不太常用的状态，如 <strong>fixed</strong>、<strong>regression</strong>、<strong>cleanup</strong>。</p><h4 id=场景一流水线完成时执行清理工作仅当执行失败时发送邮件通知>场景一：流水线完成时执行清理工作，仅当执行失败时发送邮件通知</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        docker <span style=color:#ff79c6>{</span>
+            lable <span style=color:#f1fa8c>&#39;docker-jnlp-node&#39;</span>
+            image <span style=color:#f1fa8c>&#39;harbor.example.com/jenkins/jnlp-node-slave&#39;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;构建&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span> 
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;npm install --registry=https://registry.npm.taobao.org&#39;</span> 
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    post <span style=color:#ff79c6>{</span>
+        always <span style=color:#ff79c6>{</span>
+            echo <span style=color:#f1fa8c>&#34;Post：清理工作&#34;</span>
+            sh <span style=color:#f1fa8c>&#34;echo &#39;执行一些清理工作&#39;&#34;</span>
+        <span style=color:#ff79c6>}</span>
+        failure <span style=color:#ff79c6>{</span>
+            echo <span style=color:#f1fa8c>&#34;Post：邮件通知&#34;</span>
+            mail <span style=color:#8be9fd;font-style:italic>to:</span> <span style=color:#f1fa8c>&#34;${MAIL}&#34;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>from:</span> <span style=color:#f1fa8c>&#34;Jenkins&lt;jenkins@test.com&gt;&#34;</span><span style=color:#ff79c6>,</span>
+                <span style=color:#8be9fd;font-style:italic>subject:</span> <span style=color:#f1fa8c>&#34;Failed Pipeline: ${currentBuild.fullDisplayName}&#34;</span><span style=color:#ff79c6>,</span>
+                <span style=color:#8be9fd;font-style:italic>body:</span> <span style=color:#f1fa8c>&#34;Something is wrong with ${env.BUILD_URL}&#34;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h3 id=33-stageshttpsjenkinsiodocbookpipelinesyntaxstages>3.3 <a href=https://jenkins.io/doc/book/pipeline/syntax/#stages>stages</a></h3><p><code>stages</code> 部分包含一个或多个 <code>stage</code> 指令。流水线各阶段的声明，表示实际构建的各个阶段需要在 <code>stages</code> 块中定义。</p><p>允许出现的位置： <code>pipeline</code> 块内并且只能出现一次。</p><h3 id=34-stepshttpsjenkinsiodocbookpipelinesyntaxsteps>3.4 <a href=https://jenkins.io/doc/book/pipeline/syntax/#steps>steps</a></h3><p><code>steps</code> 部分包含一个或多个步骤。流水线实际运行的步骤的声明，表示某一个阶段中实际运行的各个步骤需要在 <code>steps</code> 块中定义。</p><p>允许出现的位置： <code>stage</code> 块内并且每个 <code>stage</code> 块内只能出现一次。</p><h2 id=4-指令>4. 指令</h2><h3 id=41-environmenthttpsjenkinsiodocbookpipelinesyntaxenvironment>4.1 <a href=https://jenkins.io/doc/book/pipeline/syntax/#environment>environment</a></h3><p><code>environment</code> 指令用于指定环境变量，在不同区域指定，作用的范围也不同。</p><p>该指令支持一种特殊方法 <code>credentials()</code>，该方法可用于在 Jenkins 环境中通过标识符访问预定义的凭据，支持的凭据有以下几种：</p><ul><li><strong>Secret Text</strong>：引用 Jenkins 凭据中 <code>Secret text</code> 类型的凭据作为环境变量。</li><li><strong>Secret File</strong>：引用 Jenkins 凭据中 <code>Secret file</code> 类型的凭据作为环境变量。</li><li><strong>Username and password</strong>：引用 Jenkins 凭据中 <code>Username with password</code> 类型的凭据作为环境变量，并且会自动定义两个额外的环境变量： <code>MYVARNAME_USR</code> 和 <code>MYVARNAME_PSW</code>。</li><li><strong>SSH with Private Key</strong>：引用 Jenkins 凭据中 <code>SSH Username with private key</code> 类型的凭据作为环境变量，并且可能会自动定义两个额外的环境变量：<code>MYVARNAME_USR</code> 和 <code>MYVARNAME_PSW</code>。</li></ul><p>允许出现的位置：<code>pipeline</code> 块内或 <code>stage</code> 指令内。</p><h4 id=场景一项目类似的情况下设置环境变量用于代码复用更加清晰与简化流水线内容>场景一：项目类似的情况下设置环境变量用于代码复用，更加清晰与简化流水线内容</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        node <span style=color:#ff79c6>{</span>
+            lable <span style=color:#f1fa8c>&#39;ansible&#39;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    environment <span style=color:#ff79c6>{</span>
+        serviceName <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;gateway&#34;</span>
+        servicePort <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;30000&#34;</span>
+        imageRepo <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;harbor.example.com/base-service&#34;</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;构建镜像&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                script <span style=color:#ff79c6>{</span>
+                    docker<span style=color:#ff79c6>.</span><span style=color:#50fa7b>withRegistry</span><span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;https://harbor.example.com&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;Harbor-Admin&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+                        <span style=color:#8be9fd>def</span> Image <span style=color:#ff79c6>=</span> docker<span style=color:#ff79c6>.</span><span style=color:#50fa7b>build</span><span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;${imageRepo}/${serviceName}:${env.BUILD_ID}&#34;</span><span style=color:#ff79c6>)</span>
+                        Image<span style=color:#ff79c6>.</span><span style=color:#50fa7b>push</span><span style=color:#ff79c6>()</span>
+                    <span style=color:#ff79c6>}</span>
+                <span style=color:#ff79c6>}</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>这样，对于类似的构建流程，我们只需要替换变量就可以进行代码复用了。</p><blockquote><p>这个例子中使用了 <code>script</code> 步骤， <code>script</code> 步骤中可执行脚本式管道语法。</p></blockquote><h4 id=场景二使用凭据中的用户名密码作为环境变量>场景二：使用凭据中的用户名密码作为环境变量</h4><p>首先创建一个 Username with password 类型的全局凭据：</p><p><img src="https://cdn.nlark.com/yuque/0/2020/png/293995/1587380499564-9eb62191-f5d4-4a41-b7cf-bd9d2f175d17.png#align=left&display=inline&height=86&margin=%5Bobject%20Object%5D&name=image.png&originHeight=94&originWidth=1531&size=19463&status=done&style=stroke&width=1408" alt=image.png></p><p>然后在将凭据配置为环境变量：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;Example Username/Password&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            environment <span style=color:#ff79c6>{</span>
+                <span style=color:#8be9fd;font-style:italic>HARBOR_ADMIN</span> <span style=color:#ff79c6>=</span> credentials<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;Harbor-Admin&#39;</span><span style=color:#ff79c6>)</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;echo &#34;Harbor-Admin user is $HARBOR_ADMIN_USR&#34;&#39;</span>
+                sh <span style=color:#f1fa8c>&#39;echo &#34;Harbor-Admin is $HARBOR_ADMIN_PSW&#34;&#39;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h4 id=场景三使用凭据中的文件作为环境变量>场景三：使用凭据中的文件作为环境变量</h4><p>首先创建一个 Secret file 类型的全局凭据：</p><p><img src="https://cdn.nlark.com/yuque/0/2020/png/293995/1587439274935-07b38752-f152-456d-a8c2-c55e58b1bf7a.png#align=left&display=inline&height=37&margin=%5Bobject%20Object%5D&name=image.png&originHeight=40&originWidth=1531&size=8761&status=done&style=stroke&width=1408" alt=image.png></p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        kubernetes <span style=color:#ff79c6>{</span>
+            defaultContainer <span style=color:#f1fa8c>&#39;jnlp&#39;</span>
+            yaml <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span><span style=color:#f1fa8c>kind: Pod
+</span><span style=color:#f1fa8c>apiVersion: v1
+</span><span style=color:#f1fa8c>metadata:
+</span><span style=color:#f1fa8c>  name: jnlp
+</span><span style=color:#f1fa8c>  namespace: jenkins
+</span><span style=color:#f1fa8c>  labels:
+</span><span style=color:#f1fa8c>    app: jnlp-slave
+</span><span style=color:#f1fa8c>spec:
+</span><span style=color:#f1fa8c>  containers:
+</span><span style=color:#f1fa8c>  - name: jnlp
+</span><span style=color:#f1fa8c>    image: harbor.ambow.com/jenkins/jnlp-slave:latest
+</span><span style=color:#f1fa8c>    workingDir: /home/jenkins
+</span><span style=color:#f1fa8c>    tty: true
+</span><span style=color:#f1fa8c>&#34;&#34;&#34;</span>
+    	<span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;Example Secret file&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            environment <span style=color:#ff79c6>{</span>
+                KUBECONFIG_DEV <span style=color:#ff79c6>=</span> credentials<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;Kubeconfig-Dev&#39;</span><span style=color:#ff79c6>)</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;kubectl get pods --kubeconfig=${KUBECONFIG_DEV}&#39;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h3 id=42-optionshttpsjenkinsiodocbookpipelinesyntaxoptions><strong>4.2 <a href=https://jenkins.io/doc/book/pipeline/syntax/#options>options</a></strong></h3><p><code>options</code> 指令用于配置 Jenkins Job 本身的配置，第一次运行后才会加载配置。</p><p>允许出现的位置： <code>pipeline</code> 块内只能出现一次， <code>stage</code> 指令内只能配置某些选项。</p><p>常用配置如下：</p><ul><li><strong>buildDiscarder</strong>：保存最近历史构建记录的数量，可以节省 Jenkins 存储空间。
+例如：<code>options { buildDiscarder(logRotator(numToKeepStr: '1')) }</code></li><li><strong>checkoutToSubdirectory</strong>：在工作空间的子目录中检出源码。
+例如： <code>options { checkoutToSubdirectory('dir') }</code></li><li><strong>disableConcurrentBuilds</strong>：不允许并发执行流水线，防止同时访问共享资源。
+例如： <code>options { disableConcurrentBuilds() }</code></li><li><strong>disableResume</strong>：如果 Jenkins Master 重启，不允许恢复中断的流水线任务。
+例如： <code>options { disableResume() }</code></li><li><strong>skipDefaultCheckout</strong>：在 <code>agent</code> 节中，跳过从源代码控制中检出的默认情况。
+例如： <code>options { skipDefaultCheckout() }</code></li><li><strong>skipStagesAfterUnstable</strong>：在构建状态变为 <code>Unstable</code> 的情况下，跳过该阶段。
+例如： <code>options { skipStagesAfterUnstable() }</code></li><li><strong>timeout</strong>：设置流水线超时时间，如果超时则 Jenkins 将中止此流水线，状态为失败。可用的单位有 <code>HOURS</code>、<code>MINUTES</code>、<code>SECONDS</code>。
+例如： <code>options { timeout(time: 1, unit: 'HOURS') }</code></li><li><strong>timestamps</strong>：打印日志带上对应时间戳。
+例如：<code>options { timestamps() }</code></li><li><strong>retry</strong>：设置此流水线失败后的重试次数。
+例如： <code>options { retry(3) }</code></li></ul><p>在 <code>stage</code> 指令内可以配置的选项有：</p><ul><li><strong>skipDefaultCheckout</strong></li><li><strong>timeout</strong></li><li><strong>retry</strong></li><li><strong>timestamps</strong></li></ul><h4 id=场景一常用选项>场景一：常用选项</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>options <span style=color:#ff79c6>{</span>
+    timestamps<span style=color:#ff79c6>()</span>
+    disableConcurrentBuilds<span style=color:#ff79c6>()</span>
+    timeout<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>time:</span> <span style=color:#bd93f9>10</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>unit:</span> <span style=color:#f1fa8c>&#39;MINUTES&#39;</span><span style=color:#ff79c6>)</span>
+    buildDiscarder<span style=color:#ff79c6>(</span>logRotator<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>numToKeepStr:</span> <span style=color:#f1fa8c>&#39;10&#39;</span><span style=color:#ff79c6>))</span>  
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h4 id=场景二不使用默认代码检出自定义代码检出>场景二：不使用默认代码检出，自定义代码检出</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    options <span style=color:#ff79c6>{</span>
+        disableConcurrentBuilds<span style=color:#ff79c6>()</span>
+        timestamps<span style=color:#ff79c6>()</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;拉取代码&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                checkout scm
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>        
+</code></pre></div><h4 id=场景三设置某一阶段的超时时间与重试次数>场景三：设置某一阶段的超时时间与重试次数</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;编译代码&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            options <span style=color:#ff79c6>{</span>
+                timeout<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>time:</span> <span style=color:#bd93f9>10</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>unit:</span> <span style=color:#f1fa8c>&#39;MINUTES&#39;</span><span style=color:#ff79c6>)</span> 
+                retry<span style=color:#ff79c6>(</span><span style=color:#bd93f9>3</span><span style=color:#ff79c6>)</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#34;mvn clean install&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>    
+</code></pre></div><h3 id=43-parametershttpsjenkinsiodocbookpipelinesyntaxparameters>4.3 <a href=https://jenkins.io/doc/book/pipeline/syntax/#parameters>parameters</a></h3><p><code>parameters</code> 指令用于指定用户在触发 Pipeline 时应提供的参数列表。第一次运行后才能加载参数列表。</p><p>允许出现的位置： <code>pipeline</code> 块且只能出现一次。</p><p>可用的参数类型如下：</p><ul><li>string：字符串类型。</li><li>text：文本类型。</li><li>booleanParam：布尔值类型。</li><li>choice：选项参数类型。</li><li>password：密码类型。</li></ul><p><strong>所有的类型使用例子</strong>：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    parameters <span style=color:#ff79c6>{</span>
+        string<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;VERSION&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>defaultValue:</span> <span style=color:#f1fa8c>&#39;&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;输入版本号&#39;</span><span style=color:#ff79c6>)</span>
+
+        text<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;CHANGE_LOG&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>defaultValue:</span> <span style=color:#f1fa8c>&#39;&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;输入更新日志&#39;</span><span style=color:#ff79c6>)</span>
+
+        booleanParam<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;IS_DEPLOY&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>defaultValue:</span> <span style=color:#ff79c6>true</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;是否部署&#39;</span><span style=color:#ff79c6>)</span>
+
+        choice<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;ENV_TYPE&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>choices:</span> <span style=color:#ff79c6>[</span><span style=color:#f1fa8c>&#39;dev&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;uat&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;pre&#39;</span><span style=color:#ff79c6>],</span> <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;选择部署环境&#39;</span><span style=color:#ff79c6>)</span>
+
+        password<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;PASSWORD&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>defaultValue:</span> <span style=color:#f1fa8c>&#39;SECRET&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;输入密码&#39;</span><span style=color:#ff79c6>)</span>
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;Example&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;版本号： ${params.VERSION}&#34;</span>
+
+                echo <span style=color:#f1fa8c>&#34;更新日志: ${params.CHANGE_LOG}&#34;</span>
+
+                echo <span style=color:#f1fa8c>&#34;是否部署: ${params.IS_DEPLOY}&#34;</span>
+
+                echo <span style=color:#f1fa8c>&#34;部署环境: ${params.ENV_TYPE}&#34;</span>
+
+                echo <span style=color:#f1fa8c>&#34;密码: ${params.PASSWORD}&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>点击构建后效果如下：</p><p><img src="https://cdn.nlark.com/yuque/0/2020/png/293995/1587523888127-5c2cd9f1-db30-406e-bd15-8179c9728b1e.png#align=left&display=inline&height=398&margin=%5Bobject%20Object%5D&name=image.png&originHeight=398&originWidth=924&size=19241&status=done&style=stroke&width=924" alt=image.png></p><h4 id=场景一参数化构建时选择分支>场景一：参数化构建时选择分支</h4><blockquote><p>需要安装 Git Parameter Plug-In 插件。</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>parameters <span style=color:#ff79c6>{</span>
+  gitParameter<span style=color:#ff79c6>(</span>
+      <span style=color:#8be9fd;font-style:italic>branch:</span> <span style=color:#f1fa8c>&#39;&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>branchFilter:</span> <span style=color:#f1fa8c>&#39;.*&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>defaultValue:</span> <span style=color:#f1fa8c>&#39;master&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;选择分支&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;BRANCH_NAME&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>quickFilterEnabled:</span> <span style=color:#ff79c6>false</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>selectedValue:</span> <span style=color:#f1fa8c>&#39;NONE&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>sortMode:</span> <span style=color:#f1fa8c>&#39;NONE&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>tagFilter:</span> <span style=color:#f1fa8c>&#39;*&#39;</span><span style=color:#ff79c6>,</span>
+      <span style=color:#8be9fd;font-style:italic>type:</span> <span style=color:#f1fa8c>&#39;PT_BRANCH&#39;</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>使用参数话构建方式对于高效率持续构建的场景已经不太合适，我们可以使用 <strong>Jenkins 全局变量</strong>做一些条件判断。</p><h3 id=44-triggershttpsjenkinsiodocbookpipelinesyntaxtriggers>4.4 <a href=https://jenkins.io/doc/book/pipeline/syntax/#triggers>triggers</a></h3><p><code>triggers</code> 指令用于定义流水线的触发器。通常，生产环境需要基于手动点击构建进行部署。但在开发环境、测试环境甚至预发布环境，应该对自动构建有更高的集成度，使开发只关注于开发，而不必过多纠结于构建的过程。</p><p>允许出现的位置： <code>pipeline</code> 块且只能出现一次。</p><p>Jenkins 自带的触发器有：</p><ul><li><strong>cron</strong>：定期触发构建，配置与 Linux 系统一样定时任务管理方式类似，但是还有一些扩展的使用方式，具体参考<a href=https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax> Jenkins cron 语法官方说明</a>。
+例如： <code>triggers { cron('H */4 * * 1-5') }</code></li><li><strong>pollSCM</strong>：定期对代码仓库进行检测，如果有变化，则触发构建。
+例如： <code>triggers { pollSCM('H */4 * * 1-5') }</code></li><li><strong>upstream</strong>：由上游任务的执行结果触发。当 B 任务的执行以来 A 任务的执行结果时，A 任务就被称为 B 任务的上游任务。
+例如： <code>triggers { upstream(upstreamProjects: 'job1,job2', threshold: hudson.model.Result.SUCCESS) }</code>其中 <code>threshold</code> 参数是指上游任务的执行结果是什么值时触发， <code>hudson.model.Result</code> 是一个枚举，包括以下值：<ul><li><code>ABORTED</code>：任务被终止。</li><li><code>FAILURE</code>：构建失败。</li><li><code>SUCCESS</code>：构建成功。</li><li><code>UNSTABLE</code>：存在一些错误，但不至于构建失败。</li><li><code>NOT_BUILT</code>：在多阶段构建时，前面阶段的问题导致后面阶段无法执行。</li></ul></li></ul><p>但是这些触发构建的条件使用场景较少，最常见的场景就是推送代码后触发。</p><h4 id=场景一gitlab-提交代码自动触发构建任务>场景一：Gitlab 提交代码自动触发构建任务</h4><blockquote><p>需要安装 GitLab Plugin 插件。</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        node <span style=color:#ff79c6>{</span>
+            label <span style=color:#f1fa8c>&#39;ansible&#39;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+
+    options <span style=color:#ff79c6>{</span>
+        gitLabConnection<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;gitlab&#34;</span><span style=color:#ff79c6>)</span>
+    <span style=color:#ff79c6>}</span>
+  
+    triggers <span style=color:#ff79c6>{</span>
+        gitlab<span style=color:#ff79c6>(</span>
+            <span style=color:#8be9fd;font-style:italic>triggerOnPush:</span> <span style=color:#ff79c6>true</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>triggerOnMergeRequest:</span> <span style=color:#ff79c6>true</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>branchFilterType:</span> <span style=color:#f1fa8c>&#34;All&#34;</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>secretToken:</span> <span style=color:#f1fa8c>&#34;gitlab-tiggers-test&#34;</span>
+        <span style=color:#ff79c6>)</span>
+    <span style=color:#ff79c6>}</span>
+
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;构建&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;测试 Gitlab tiggers&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+ 
+    post <span style=color:#ff79c6>{</span>
+        failure <span style=color:#ff79c6>{</span>
+            updateGitlabCommitStatus <span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#34;build&#34;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>state:</span> <span style=color:#f1fa8c>&#34;failed&#34;</span>
+        <span style=color:#ff79c6>}</span>
+        success <span style=color:#ff79c6>{</span>
+            updateGitlabCommitStatus <span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#34;build&#34;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>state:</span> <span style=color:#f1fa8c>&#34;success&#34;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>然后在 Gitlab 配置 Webhook：</p><p><img src="https://cdn.nlark.com/yuque/0/2020/png/293995/1587546513161-6e620c0c-e1d8-4364-96d5-ce99f424d788.png#align=left&display=inline&height=128&margin=%5Bobject%20Object%5D&name=image.png&originHeight=128&originWidth=656&size=9689&status=done&style=stroke&width=656" alt=image.png></p><p>提交代码后，可自动触发构建。并将构建状态推送至 Gitlab 流水线面板中。</p><p><img src="https://cdn.nlark.com/yuque/0/2020/png/293995/1587546555813-1fb14231-4eef-4bfa-bbac-c2c995957012.png#align=left&display=inline&height=233&margin=%5Bobject%20Object%5D&name=image.png&originHeight=233&originWidth=1288&size=24576&status=done&style=stroke&width=1288" alt=image.png></p><h4 id=场景二流水线任务过滤分支触发构建>场景二：流水线任务过滤分支触发构建</h4><p>只有 master 分支和 dev 分支提交代码才触发构建任务。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        node <span style=color:#ff79c6>{</span>
+            label <span style=color:#f1fa8c>&#39;ansible&#39;</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+
+    triggers <span style=color:#ff79c6>{</span>
+        gitlab<span style=color:#ff79c6>(</span>
+            <span style=color:#8be9fd;font-style:italic>triggerOnPush:</span> <span style=color:#ff79c6>true</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>triggerOnMergeRequest:</span> <span style=color:#ff79c6>true</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>branchFilterType:</span> <span style=color:#f1fa8c>&#34;NameBasedFilter&#34;</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>includeBranchesSpec:</span> <span style=color:#f1fa8c>&#34;master,dev&#34;</span><span style=color:#ff79c6>,</span>
+            <span style=color:#8be9fd;font-style:italic>secretToken:</span> <span style=color:#f1fa8c>&#34;gitlab-tiggers-test&#34;</span>
+        <span style=color:#ff79c6>)</span>
+
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;构建&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;测试 Gitlab tiggers&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><p>其中用到的参数为：</p><ul><li><strong>triggerOnPush</strong>：当 Gitlab 触发 Push 事件时，是否执行构建。</li><li><strong>triggerOnMergeRequest</strong>：当 Gitlab 触发 MergeRequest 事件时，是否执行构建。</li><li><strong>secretToken</strong>：配置触发器 Token 值。</li><li><strong>branchFilterType</strong>：只有符合条件的分支才能触发构建，选项有：<ul><li><code>All</code>：所有分支。</li><li><code>NameBasedFilter</code>：基于分支名过滤，多个分支使用（,）相隔，选项有：<ul><li><code>includeBranchesSpec</code>：配置包括的分支名。</li><li><code>excludeBranchesSpec</code>：配置排除的分支名。</li></ul></li><li><code>RegexBasedFilter</code>：基于正则表达式对分支过滤。选项有：<ul><li><code>sourceBranchRegex</code>：配置正则表达式。</li></ul></li></ul></li></ul><blockquote><p>此配置无法适用于多分支流水线构建任务。</p></blockquote><h3 id=45-stagehttpsjenkinsiodocbookpipelinesyntaxstage>4.5 <a href=https://jenkins.io/doc/book/pipeline/syntax/#stage>stage</a></h3><p><code>stage</code> 指令标识 <code>stages</code> 节中的具体阶段。</p><p>允许出现的位置： <code>stages</code> 节内。</p><h3 id=46-toolshttpsjenkinsiodocbookpipelinesyntaxtools>4.6 <a href=https://jenkins.io/doc/book/pipeline/syntax/#tools>tools</a></h3><p><code>tools</code> 指令定义流水线中的常用的一些工具。工具在「系统管理」-「全局工具设置」中添加。</p><p>允许出现的位置： <code>pipeline</code> 块内或 <code>stage</code> 指令内。</p><h4 id=场景一使用-maven-工具构建>场景一：使用 maven 工具构建</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent <span style=color:#ff79c6>{</span>
+        label <span style=color:#f1fa8c>&#39;ansible&#39;</span>   
+    <span style=color:#ff79c6>}</span>
+    tools <span style=color:#ff79c6>{</span>
+        maven <span style=color:#f1fa8c>&#39;maven&#39;</span> 
+    <span style=color:#ff79c6>}</span>
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;测试&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            steps <span style=color:#ff79c6>{</span>
+                sh <span style=color:#f1fa8c>&#39;/data/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven/bin/mvn --version&#39;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h3 id=47-inputhttpsjenkinsiodocbookpipelinesyntaxinput>4.7 <a href=https://jenkins.io/doc/book/pipeline/syntax/#input>input</a></h3><p><code>input</code> 指令允许在流水线运行中暂停运行，提示用户输入指定参数。作为用户提交的任何一部分参数都将应用于其他部分。</p><p>配置项：</p><ul><li><strong>message</strong>：必须参数，在用户提交 <code>input</code> 时作为说明信息呈现给用户。</li><li><strong>id</strong>：可选标识符，默认为 <code>stage</code> 名称。</li><li><strong>ok</strong>：自定义确认按钮的文本信息。</li><li><strong>submitter</strong>：允许提交的用户或组，以逗号分隔的用户列表或外部组名。默认允许任何用户。</li><li><strong>submitterParameter</strong>：将 <code>submitter</code> 的值加入环境变量使用。</li><li><strong>parameters</strong>：提示提交者一个可选的参数列表，参数列表配置参考 <a href=#M04Q8><code>parameters</code></a>。</li></ul><h4 id=场景一最终部署需要用户确认>场景一：最终部署需要用户确认</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;部署&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            input <span style=color:#ff79c6>{</span>
+                message <span style=color:#f1fa8c>&#34;是否部署?&#34;</span>
+                ok <span style=color:#f1fa8c>&#34;True&#34;</span>
+                submitter <span style=color:#f1fa8c>&#34;admin&#34;</span>
+                submitterParameter <span style=color:#f1fa8c>&#34;APPROVER&#34;</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;批准者：${APPROVER}&#34;</span>
+                echo <span style=color:#f1fa8c>&#34;部署环境...&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h4 id=场景二用户选择环境部署>场景二：用户选择环境部署</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;选择环境&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            input <span style=color:#ff79c6>{</span>
+                message <span style=color:#f1fa8c>&#34;确认部署?&#34;</span>
+                ok <span style=color:#f1fa8c>&#34;确认&#34;</span>
+                parameters <span style=color:#ff79c6>{</span>
+                    choice<span style=color:#ff79c6>(</span><span style=color:#8be9fd;font-style:italic>name:</span> <span style=color:#f1fa8c>&#39;ENV&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#8be9fd;font-style:italic>choices:</span> <span style=color:#ff79c6>[</span><span style=color:#f1fa8c>&#39;dev&#39;</span><span style=color:#ff79c6>,</span> <span style=color:#f1fa8c>&#39;uat&#39;</span><span style=color:#ff79c6>],</span> <span style=color:#8be9fd;font-style:italic>description:</span> <span style=color:#f1fa8c>&#39;选择部署环境&#39;</span><span style=color:#ff79c6>)</span>
+                <span style=color:#ff79c6>}</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;部署至 ${ENV} 环境&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h3 id=48-whenhttpsjenkinsiodocbookpipelinesyntaxwhen>4.8 <a href=https://jenkins.io/doc/book/pipeline/syntax/#when>when</a></h3><p><code>when</code> 指令允许流水线根据给定的条件决定是否执行该阶段。至少有一个条件，如果有多个条件，必须全部返回为 <code>true</code> 才会执行该阶段。</p><p>允许出现的位置： <code>stage</code> 指令内。</p><p>常用的内置条件：</p><ul><li><strong>branch</strong>：分支名相同才会执行，只适用于多分支流水线任务。<br>例如： <code>when { branch 'master' }</code>。</li><li><strong>environment</strong>：比较环境变量的值相同才会执行。<br>例如： <code>when { environment name: 'DEPLOY_TO', value: 'production' }</code>。</li><li><strong>equals</strong>：断言结果为真时才会执行。<br>例如：<code>when { equals expected: 2, actual: currentBuild.number }</code>。</li><li><strong>expression</strong>：Groovy 表达式返回的布尔值为真时才会执行。<br>例如：<code>when { expression { return params.DEBUG_BUILD } }</code>。</li><li><strong>not</strong>：嵌套条件的布尔值为假时才会执行。<br>例如： <code>when { not { branch 'master' } }</code>。</li><li><strong>allOf</strong>：当所有的嵌套条件都为真时才会执行。<br>例如：<code>when { allOf { branch 'master'; environment name: 'DEPLOY_TO', value: 'production' } }</code>。</li><li><strong>anyOf</strong>：至少有一个嵌套条件为真时才会执行。<br>例如： <code>when { anyOf { branch 'master'; branch 'staging' } }</code>。</li><li><strong>triggeredBy</strong>：根据触发器的参数决定是否执行。<br>例如：<ul><li><code>when { triggeredBy 'SCMTrigger' }</code></li><li><code>when { triggeredBy 'TimerTrigger' }</code></li><li><code>when { triggeredBy 'UpstreamCause' }</code></li><li><code>when { triggeredBy cause: "UserIdCause", detail: "vlinde" }</code></li></ul></li></ul><h4 id=场景一根据分支名部署至不同环境>场景一：根据分支名部署至不同环境</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;deploy to dev&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            when <span style=color:#ff79c6>{</span>
+                branch <span style=color:#f1fa8c>&#39;dev&#39;</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;deploy to dev env&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;deploy to prod&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            when <span style=color:#ff79c6>{</span>
+                branch <span style=color:#f1fa8c>&#39;master&#39;</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;deploy to prod env&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div><h4 id=场景二过滤指定分支进行部署>场景二：过滤指定分支进行部署</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>pipeline <span style=color:#ff79c6>{</span>
+    agent any
+    stages <span style=color:#ff79c6>{</span>
+        stage<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#39;deploying&#39;</span><span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+            when <span style=color:#ff79c6>{</span>
+                expression <span style=color:#ff79c6>{</span> BRANCH_NAME <span style=color:#ff79c6>==~</span> <span style=color:#f1fa8c>/(dev|prod)/</span> <span style=color:#ff79c6>}</span>
+            <span style=color:#ff79c6>}</span>
+            steps <span style=color:#ff79c6>{</span>
+                echo <span style=color:#f1fa8c>&#34;deploy to ${BRANCH_NAME}&#34;</span>
+            <span style=color:#ff79c6>}</span>
+        <span style=color:#ff79c6>}</span>
+    <span style=color:#ff79c6>}</span>
+<span style=color:#ff79c6>}</span>
+</code></pre></div></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/jenkins/pipeline/jenkins-pipeline-%E5%A3%B0%E6%98%8E%E5%BC%8F%E8%AF%AD%E6%B3%95/>Jenkins Pipeline - 声明式语法</a></li><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li><li><a href=/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/>Jenkins Pipeline - Groovy 知识点</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
+<a href=https://github.com/jugggao><b>Github.</b></a></p></footer></body></html>

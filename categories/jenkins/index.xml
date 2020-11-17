@@ -1,4 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jenkins on 剑十三</title><link>https://jugggao.github.io/categories/jenkins/</link><description>Recent content in Jenkins on 剑十三</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 12 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jugggao.github.io/categories/jenkins/index.xml" rel="self" type="application/rss+xml"/><item><title>Jenkins Pipeline - Groovy 知识点</title><link>https://jugggao.github.io/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h3 id="groovy-知识点">Groovy 知识点&lt;/h3>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jenkins on 剑十三</title><link>https://jugggao.github.io/categories/jenkins/</link><description>Recent content in Jenkins on 剑十三</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 16 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jugggao.github.io/categories/jenkins/index.xml" rel="self" type="application/rss+xml"/><item><title>Jenkins Pipeline - 声明式语法</title><link>https://jugggao.github.io/posts/jenkins/pipeline/jenkins-pipeline-%E5%A3%B0%E6%98%8E%E5%BC%8F%E8%AF%AD%E6%B3%95/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/jenkins/pipeline/jenkins-pipeline-%E5%A3%B0%E6%98%8E%E5%BC%8F%E8%AF%AD%E6%B3%95/</guid><description>&lt;h3 id="jenkins-pipeline-声明式语法">Jenkins Pipeline 声明式语法&lt;/h3>
+&lt;p>Jenkins Pipeline 有两种语法风格：&lt;/p>
+&lt;ul>
+&lt;li>声明式管道语法（Declarative pipeline syntax）&lt;/li>
+&lt;li>脚本式管道语法（Scripted pipeline syntax）&lt;/li>
+&lt;/ul>
+&lt;p>脚本式管道语法以 Groovy 语言为基础，语法结构同 Groovy 相同。
+由于 Groovy 不适合所有初学者。所以 Jenkins 团队为编写 Jenkins 流水线提供一种更简单的声明式管道。&lt;/p>
+&lt;p>这两种语法的区别在于语法和灵活性：&lt;/p>
+&lt;ul>
+&lt;li>声明式管道语法鼓励采用&lt;a href="https://en.wikipedia.org/wiki/Declarative_programming">声明式编程模型&lt;/a>；脚本式管道语法遵循&lt;a href="https://en.wikipedia.org/wiki/Imperative_programming">命令式编程模型&lt;/a>。&lt;/li>
+&lt;li>声明式管道通过更严格和预定义的结构对用户施加了限制，这对于比较简单的持续交付流程来说是更理想的选择；而脚本式管道对于语法和结构唯一的限制是由 Groovy 子集本身定义的，脚本式管道几乎可以做任何事情，因此对于有更复杂的要求的用户或者对 Groovy 语言很熟练的用户来说是理想的选择。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>关于如何选择声明式语法或者脚本式语法？&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>如果是 Jenkins 新手可以通过声明式管道语法入门，声明式管道提供了一些保护栏（框架），因此在刚开始学习的时候不会总出错，而且调试起来比较容易。另外，声明式管道的官方文档更详细。&lt;/li>
+&lt;li>如果是 Jenkins 高级用户或者对 Groovy 语言使用熟练，在工作中面对复杂的持续交付的场景，并且需要将逻辑复杂的管道代码模块化，那么脚本式管道结合共享库会更适合你。&lt;/li>
+&lt;li>如果是 Jenkins 管理员，则可能更希望坚持使用声明式管道，可以为使用者提供最佳的整体体验。并且能使其他的新同事更容易加入 Jenkins Pipeline 编写工作当中。&lt;/li>
+&lt;/ul>
+&lt;p>总之，仁者见仁，智者见智。无论怎么选择，只需要确保&lt;strong>一致性&lt;/strong>即可。&lt;/p>
+&lt;p>那就先从简单、易读的声明式语法说起。&lt;/p></description></item><item><title>Jenkins Pipeline - Groovy 知识点</title><link>https://jugggao.github.io/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/</link><pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate><guid>https://jugggao.github.io/posts/jenkins/pipeline/groovy-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid><description>&lt;h3 id="groovy-知识点">Groovy 知识点&lt;/h3>
 &lt;p>如果想深入学习 Jenkins，并编写 Jenkins Pipeline 共享库，Groovy 是必须学习并了的。&lt;br>
 Groovy 是动态语言，语法和 Java 基本一致，实际上就是 Java，但是又有一些特性。&lt;br>
 这里就记录自己需要注意的特性。&lt;/p></description></item></channel></rss>
