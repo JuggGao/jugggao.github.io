@@ -10,19 +10,19 @@ Date staticDate <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new
 <span style=color:#6272a4>// 可以用 var.class 获取变量类型
 </span><span style=color:#6272a4></span>println dynamicDate<span style=color:#ff79c6>.</span><span style=color:#50fa7b>class</span> <span style=color:#ff79c6>==</span> staticDate<span style=color:#ff79c6>.</span><span style=color:#50fa7b>class</span>
 </code></pre></div><p>如果声明了静态类型，就不能再改变该变量的类型。</p></li><li><p>Groovy 定义方法时，如果参数没有类型，可以省略 def。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>void</span> <span style=color:#50fa7b>doSomething</span><span style=color:#ff79c6>(</span>param1<span style=color:#ff79c6>,</span> param2<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span> <span style=color:#ff79c6>}</span>
-</code></pre></div></li><li><p>Groovy 定义构造器时，避免使用 def 关键字。</p><pre><code>builder.students {
-   student {
-      studentname 'Joe'
-      studentid '1'
+</code></pre></div></li><li><p>Groovy 定义构造器时，避免使用 def 关键字。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy>builder<span style=color:#ff79c6>.</span><span style=color:#50fa7b>students</span> <span style=color:#ff79c6>{</span>
+   student <span style=color:#ff79c6>{</span>
+      studentname <span style=color:#f1fa8c>&#39;Joe&#39;</span>
+      studentid <span style=color:#f1fa8c>&#39;1&#39;</span>
           
-      Marks(
-         Subject1: 10,
-         Subject2: 20,
-         Subject3: 30,
-      )
-   } 
-}
-</code></pre></li><li><p>Groovy 中，单引号引起来的字符串是java字符串，不能使用占位符来替换变量，双引号引起的字符串则是 Java 字符串或者 Groovy 字符串。</p></li><li><p>Groovy 中的 GString 提供了强大的格式化能力，可以避免使用 Java 的 <code>String.format()</code> 来格式化输出。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> version <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2.4</span>
+      Marks<span style=color:#ff79c6>(</span>
+         <span style=color:#8be9fd;font-style:italic>Subject1:</span> <span style=color:#bd93f9>10</span><span style=color:#ff79c6>,</span>
+         <span style=color:#8be9fd;font-style:italic>Subject2:</span> <span style=color:#bd93f9>20</span><span style=color:#ff79c6>,</span>
+         <span style=color:#8be9fd;font-style:italic>Subject3:</span> <span style=color:#bd93f9>30</span><span style=color:#ff79c6>,</span>
+      <span style=color:#ff79c6>)</span>
+   <span style=color:#ff79c6>}</span> 
+<span style=color:#ff79c6>}</span>
+</code></pre></div></li><li><p>Groovy 中，单引号引起来的字符串是java字符串，不能使用占位符来替换变量，双引号引起的字符串则是 Java 字符串或者 Groovy 字符串。</p></li><li><p>Groovy 中的 GString 提供了强大的格式化能力，可以避免使用 Java 的 <code>String.format()</code> 来格式化输出。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=color:#8be9fd>def</span> version <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2.4</span>
   
 <span style=color:#6272a4>// Java String：单引号中的是普通字符串
 </span><span style=color:#6272a4></span><span style=color:#8be9fd>def</span> javaString <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;Java&#39;</span>
