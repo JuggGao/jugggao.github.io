@@ -1,0 +1,49 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><style>a{text-decoration:none}</style><title>A Tour of Go - Exercise: Reader</title><link rel=stylesheet href=/css/style.css></head><body><header><a style=font-size:24px;font-family:宋体;float:contour;font-weight:700 class=header-title href=https://jugggao.github.io/>剑十三</a><br><div style=float:right;font-size:15px;font-weight:700>与其感慨路难行，不如马上出发</div><br><a class=nav href=/>主页.</a>
+<a class=nav href=/posts/>文档.</a>
+<a class=nav href=/categories/>分类.</a>
+<a class=nav href=/tags/>标签.</a>
+<a class=nav href=/about/>关于.</a></nav></p></header><main><article><h1>A Tour of Go - Exercise: Reader</h1><b><time>26.11.2020</time></b> |
+<a href=/tags/go>Go</a>.
+<a href=/tags/a-tour-of-go>A Tour of Go</a>.
+<a href=/tags/exercise>Exercise</a>.<div><h3 id=exercise-readershttpstourgolangorgmethods22><a href=https://tour.golang.org/methods/22>Exercise: Readers</a></h3><p>Implement a <code>Reader</code> type that emits an infinite stream of the ASCII character <code>'A'</code>.</p><h3 id=1-解题>1. 解题</h3><p>Go 语言实现：</p><p>思路：</p><ol><li><p>参考代码中 <a href=https://github.com/golang/tour/blob/master/reader/validate.go><code>reader.Validate</code></a> 方法很简单：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>Validate</span>(r io.Reader) {
+    b <span style=color:#ff79c6>:=</span> <span style=color:#8be9fd;font-style:italic>make</span>([]<span style=color:#8be9fd>byte</span>, <span style=color:#bd93f9>1024</span>, <span style=color:#bd93f9>2048</span>)
+    i, o <span style=color:#ff79c6>:=</span> <span style=color:#bd93f9>0</span>, <span style=color:#bd93f9>0</span>
+    <span style=color:#ff79c6>for</span> ; i &lt; <span style=color:#bd93f9>1</span><span style=color:#ff79c6>&lt;&lt;</span><span style=color:#bd93f9>20</span> <span style=color:#ff79c6>&amp;&amp;</span> o &lt; <span style=color:#bd93f9>1</span><span style=color:#ff79c6>&lt;&lt;</span><span style=color:#bd93f9>20</span>; i<span style=color:#ff79c6>++</span> { <span style=color:#6272a4>// test 1mb
+</span><span style=color:#6272a4></span>        n, err <span style=color:#ff79c6>:=</span> r.<span style=color:#50fa7b>Read</span>(b)
+        <span style=color:#ff79c6>for</span> i, v <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> b[:n] {
+            <span style=color:#ff79c6>if</span> v <span style=color:#ff79c6>!=</span> <span style=color:#f1fa8c>&#39;A&#39;</span> {
+                fmt.<span style=color:#50fa7b>Fprintf</span>(os.Stderr, <span style=color:#f1fa8c>&#34;got byte %x at offset %v, want &#39;A&#39;\n&#34;</span>, v, o<span style=color:#ff79c6>+</span>i)
+                <span style=color:#ff79c6>return</span>
+            }
+        }
+        o <span style=color:#ff79c6>+=</span> n
+        <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+            fmt.<span style=color:#50fa7b>Fprintf</span>(os.Stderr, <span style=color:#f1fa8c>&#34;read error: %v\n&#34;</span>, err)
+            <span style=color:#ff79c6>return</span>
+        }
+    }
+    <span style=color:#ff79c6>if</span> o <span style=color:#ff79c6>==</span> <span style=color:#bd93f9>0</span> {
+        fmt.<span style=color:#50fa7b>Fprintf</span>(os.Stderr, <span style=color:#f1fa8c>&#34;read zero bytes after %d Read calls\n&#34;</span>, i)
+        <span style=color:#ff79c6>return</span>
+    }
+    fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;OK!&#34;</span>)
+}
+</code></pre></div></li><li><p>将 <code>A</code> 把 <code>b[:n]</code> 填满即可。</p></li></ol><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#ff79c6>package</span> main
+
+<span style=color:#ff79c6>import</span> <span style=color:#f1fa8c>&#34;golang.org/x/tour/reader&#34;</span>
+
+<span style=color:#8be9fd;font-style:italic>type</span> MyReader <span style=color:#8be9fd;font-style:italic>struct</span>{}
+
+<span style=color:#6272a4>// TODO: Add a Read([]byte) (int, error) method to MyReader.
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (r MyReader) <span style=color:#50fa7b>Read</span>(b []<span style=color:#8be9fd>byte</span>) (n <span style=color:#8be9fd>int</span>, err <span style=color:#8be9fd>error</span>) {
+    <span style=color:#ff79c6>for</span> i <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> b {
+        b[i] = <span style=color:#f1fa8c>&#39;A&#39;</span>
+    }
+    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>len</span>(b), <span style=color:#ff79c6>nil</span>
+}
+
+<span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {
+    reader.<span style=color:#50fa7b>Validate</span>(MyReader{})
+}
+</code></pre></div><h3 id=2-参考>2. 参考</h3><p>A Tour of Go 的 Github 仓库中的<a href=https://github.com/golang/tour/blob/master/solutions/readers.go>答案</a></p></div></article></main><aside><div><div><h3>最近文章</h3></div><div><ul><li><a href=/posts/go/tour.golang.org/exercise-reader/>A Tour of Go - Exercise: Reader</a></li><li><a href=/posts/jenkins/pipeline/jenkins-pipeline-%E5%A3%B0%E6%98%8E%E5%BC%8F%E8%AF%AD%E6%B3%95/>Jenkins Pipeline - 声明式语法</a></li><li><a href=/posts/go/tour.golang.org/exercise-errors/>A Tour of Go - Exercise: Errors</a></li><li><a href=/posts/go/tour.golang.org/exercise-stringer/>A Tour of Go - Exercise: Stringers</a></li><li><a href=/posts/go/tour.golang.org/exercise-fibonacci-closure/>A Tour of Go - Exercise: Fibonacci closure</a></li></ul></div></div></aside><footer><p>&copy; 2020 <a href=https://jugggao.github.io/><b>剑十三.</b></a>
+<a href=https://github.com/jugggao><b>Github.</b></a></p></footer></body></html>
